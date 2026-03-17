@@ -15,7 +15,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
             background-color: var(--ice-blue);
             margin: 0;
             display: flex;
@@ -100,24 +100,31 @@
             background: white; left: 7.5px; top: 15px; border-radius: 50%;
         }
 
-        /* 彈出對話框 */
-        #modal-overlay {
+        /* 彈出對話框 & 命名畫面 */
+        .overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); display: none;
+            background: rgba(0,0,0,0.8); display: flex;
             justify-content: center; align-items: center; z-index: 100;
         }
 
-        #quiz-card {
-            background: white; padding: 30px; border-radius: 15px;
-            width: 80%; max-width: 500px; text-align: center;
+        .modal-card {
+            background: white; padding: 40px; border-radius: 15px;
+            width: 80%; max-width: 450px; text-align: center;
         }
 
-        .option-btn {
+        .input-field {
+            width: 80%; padding: 10px; margin: 20px 0;
+            border: 2px solid var(--ocean-blue); border-radius: 5px;
+            font-size: 18px; text-align: center;
+        }
+
+        .option-btn, .action-btn {
             display: block; width: 100%; padding: 12px; margin: 10px 0;
             border: 2px solid var(--ocean-blue); border-radius: 8px;
             background: none; cursor: pointer; font-size: 16px; transition: 0.2s;
         }
 
+        .action-btn { background: var(--ocean-blue); color: white; }
         .option-btn:hover { background: var(--ice-blue); }
 
         /* 建築進度 */
@@ -138,8 +145,17 @@
 <body>
 
 <div id="game-container">
-    <div id="hud">
-        <div id="player-name">🐧 企鵝小華 (Kayo)</div>
+    <div id="name-overlay" class="overlay">
+        <div class="modal-card">
+            <h2>🐧 歡迎來到南極！</h2>
+            <p>在開始蓋房子之前，請告訴大家你的名字：</p>
+            <input type="text" id="name-input" class="input-field" placeholder="請輸入你的名字">
+            <button class="action-btn" onclick="setPlayerName()">開始冒險</button>
+        </div>
+    </div>
+
+    <div id="hud" class="hidden">
+        <div id="player-display">🐧 <span id="display-name">玩家</span></div>
         <div>
             <span class="resource-item">🌿 樹枝: <span id="r-branch">0</span></span>
             <span class="resource-item">🍃 樹葉: <span id="r-leaf">0</span></span>
@@ -148,233 +164,4 @@
     </div>
 
     <div id="game-screen">
-        <div class="map-zone" onclick="startChallenge('branch')">
-            <div class="icon-branch"></div>
-            <div class="zone-label">樹枝區 (語法)</div>
-        </div>
-        <div class="map-zone" onclick="startChallenge('leaf')">
-            <div class="icon-leaf"></div>
-            <div class="zone-label">樹葉區 (詞彙)</div>
-        </div>
-        <div class="map-zone" onclick="startChallenge('stone')">
-            <div class="icon-stone"></div>
-            <div class="zone-label">石頭區 (台灣文化)</div>
-        </div>
-        <div class="map-zone" onclick="startChallenge('penguin')">
-            <div class="icon-penguin"></div>
-            <div class="zone-label">企鵝區 (綜合挑戰)</div>
-        </div>
-    </div>
-
-    <div id="build-panel">
-        <div id="build-status">目前的家：露天雪地 ❄️ (進度 0%)</div>
-        <div class="progress-bar"><div id="progress-fill"></div></div>
-        <button onclick="tryBuild()" style="padding: 5px 20px; cursor:pointer;">嘗試蓋房子</button>
-    </div>
-
-    <div id="modal-overlay">
-        <div id="quiz-card">
-            <h3 id="quiz-category">題目類型</h3>
-            <p id="quiz-question" style="font-size: 18px; margin: 20px 0;"></p>
-            <div id="quiz-options"></div>
-            <p id="quiz-feedback" style="margin-top:15px; font-weight:bold;"></p>
-            <button id="close-modal" class="hidden" onclick="closeModal()" style="margin-top:15px;">繼續冒險</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    // --- 題庫資料 (TOCFL A2-B1 & 台灣文化) ---
-    const questionBank = {
-        branch: [
-            { q: "這杯珍奶___我喝完了。", a: ["被", "把", "叫"], correct: 1 },
-            { q: "他跑得比我___。", a: ["非常快", "很慢", "快得多"], correct: 2 },
-            { q: "作業___老師改好了。", a: ["被", "把", "讓"], correct: 0 }
-        ],
-        leaf: [
-            { q: "在台灣，買飲料可以調整___度（甜度）。", a: ["冰", "糖", "熱"], correct: 1 },
-            { q: "我要買一___筆。", a: ["條", "個", "枝"], correct: 2 },
-            { q: "這雙鞋子雖然很貴，___質量很好。", a: ["而且", "但是", "所以"], correct: 1 }
-        ],
-        stone: [
-            { q: "在台灣搭捷運時，不能做什麼？", a: ["看報紙", "玩手機", "吃東西"], correct: 2 },
-            { q: "台灣人說「去冰」是什麼意思？", a: ["不加冰塊", "加很多冰", "冰塊融化了"], correct: 0 },
-            { q: "台灣最有名的夜市小吃「珍奶」全名是？", a: ["珍珠奶茶", "珍貴奶茶", "真實奶茶"], correct: 0 }
-        ],
-        penguin: [
-            { q: "綜合題：小明：「這附近有超商嗎？」小華：「___過馬路就到了。」", a: ["就", "才", "走"], correct: 2 },
-            { q: "綜合題：「微糖」通常是指多少甜度？", a: ["3分糖", "7分糖", "5分糖"], correct: 0 }
-        ],
-        event: [
-            { q: "【事件】跌入冰層了！請回答：台灣的報稅月份通常是？", a: ["五月", "一月", "十月"], correct: 0 },
-            { q: "【事件】暴風雪來襲！「不見不散」的意思是？", a: ["不見面就散會", "一定要見到面", "不能隨便散步"], correct: 1 }
-        ]
-    };
-
-    // --- 遊戲狀態 ---
-    let gameState = {
-        resources: { branch: 0, leaf: 0, stone: 0, penguin: 0 },
-        houseLevel: 0,
-        houseNames: ["露天雪地", "簡易草巢", "穩固木屋", "豪華石宮"],
-        totalNeeded: [0, 5, 15, 30] // 升級所需總材料數
-    };
-
-    // --- 初始化 ---
-    function init() {
-        const saved = localStorage.getItem('penguinGameSave');
-        if (saved) {
-            gameState = JSON.parse(saved);
-        }
-        updateHUD();
-        updateBuildProgress();
-    }
-
-    function updateHUD() {
-        document.getElementById('r-branch').innerText = gameState.resources.branch;
-        document.getElementById('r-leaf').innerText = gameState.resources.leaf;
-        document.getElementById('r-stone').innerText = gameState.resources.stone;
-    }
-
-    function updateBuildProgress() {
-        const currentLevel = gameState.houseLevel;
-        if(currentLevel >= 3) {
-            document.getElementById('build-status').innerText = "最終目標：豪華石宮 🏆 已達成！";
-            document.getElementById('progress-fill').style.width = "100%";
-            return;
-        }
-
-        const nextReq = gameState.totalNeeded[currentLevel + 1];
-        const currentTotal = gameState.resources.branch + gameState.resources.leaf + gameState.resources.stone;
-        const percent = Math.min((currentTotal / nextReq) * 100, 100);
-        
-        document.getElementById('progress-fill').style.width = percent + "%";
-        document.getElementById('build-status').innerText = `目前的家：${gameState.houseNames[currentLevel]} (目標材料: ${currentTotal}/${nextReq})`;
-    }
-
-    // --- 挑戰邏輯 ---
-    function startChallenge(type) {
-        // 平衡檢查
-        const res = gameState.resources;
-        if (type !== 'penguin' && res[type] > (res.branch + res.leaf + res.stone) / 2 + 3) {
-            alert("這項材料太多了！企鵝建議你去別的地方看看，否則房子會不平衡喔！");
-            return;
-        }
-
-        // 機率觸發隨機事件
-        if (Math.random() < 0.15) {
-            triggerRandomEvent();
-            return;
-        }
-
-        showQuiz(type);
-    }
-
-    function showQuiz(type) {
-        const questions = questionBank[type];
-        const randomQ = questions[Math.floor(Math.random() * questions.length)];
-        
-        document.getElementById('modal-overlay').style.display = 'flex';
-        document.getElementById('quiz-category').innerText = `【挑戰】獲取${type === 'penguin' ? '經驗' : '材料'}`;
-        document.getElementById('quiz-question').innerText = randomQ.q;
-        
-        const optionsDiv = document.getElementById('quiz-options');
-        optionsDiv.innerHTML = '';
-        document.getElementById('quiz-feedback').innerText = '';
-        document.getElementById('close-modal').classList.add('hidden');
-
-        randomQ.a.forEach((opt, index) => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = opt;
-            btn.onclick = () => checkAnswer(index, randomQ.correct, type);
-            optionsDiv.appendChild(btn);
-        });
-    }
-
-    function checkAnswer(selected, correct, type) {
-        const feedback = document.getElementById('quiz-feedback');
-        const btns = document.querySelectorAll('.option-btn');
-        btns.forEach(b => b.disabled = true);
-
-        if (selected === correct) {
-            feedback.innerText = "答對了！✨ 獲得材料 +1";
-            feedback.style.color = 'var(--success-green)';
-            if (type !== 'event') gameState.resources[type]++;
-        } else {
-            feedback.innerText = "可惜答錯了... 正確答案是：" + document.querySelectorAll('.option-btn')[correct].innerText;
-            feedback.style.color = 'var(--danger-red)';
-        }
-
-        document.getElementById('close-modal').classList.remove('hidden');
-        saveGame();
-        updateHUD();
-        updateBuildProgress();
-    }
-
-    function triggerRandomEvent() {
-        const eventType = Math.random() > 0.5 ? "暴風雪" : "掉進冰層";
-        document.getElementById('modal-overlay').style.display = 'flex';
-        document.getElementById('quiz-category').innerText = `⚠️ 緊急事件：${eventType}！`;
-        
-        const questions = questionBank.event;
-        const randomQ = questions[Math.floor(Math.random() * questions.length)];
-        
-        document.getElementById('quiz-question').innerText = `如果你能答對這題，救援隊就會來救你：\n\n${randomQ.q}`;
-        
-        const optionsDiv = document.getElementById('quiz-options');
-        optionsDiv.innerHTML = '';
-        document.getElementById('quiz-feedback').innerText = '';
-        document.getElementById('close-modal').classList.add('hidden');
-
-        randomQ.a.forEach((opt, index) => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = opt;
-            btn.onclick = () => {
-                if (index === randomQ.correct) {
-                    alert("救援成功！你平安無事。");
-                    closeModal();
-                } else {
-                    const lost = Math.min(gameState.resources.branch, 1);
-                    gameState.resources.branch -= lost;
-                    alert(`救援失敗... 你損失了一些樹枝。`);
-                    closeModal();
-                }
-                updateHUD();
-                saveGame();
-            };
-            optionsDiv.appendChild(btn);
-        });
-    }
-
-    function tryBuild() {
-        const currentLevel = gameState.houseLevel;
-        if(currentLevel >= 3) return;
-
-        const nextReq = gameState.totalNeeded[currentLevel + 1];
-        const currentTotal = gameState.resources.branch + gameState.resources.leaf + gameState.resources.stone;
-
-        if (currentTotal >= nextReq) {
-            gameState.houseLevel++;
-            alert(`恭喜！你的家升級為：${gameState.houseNames[gameState.houseLevel]} 🎉`);
-            saveGame();
-            updateBuildProgress();
-        } else {
-            alert(`材料還不夠喔！還差 ${nextReq - currentTotal} 個材料。`);
-        }
-    }
-
-    function closeModal() {
-        document.getElementById('modal-overlay').style.display = 'none';
-    }
-
-    function saveGame() {
-        localStorage.setItem('penguinGameSave', JSON.stringify(gameState));
-    }
-
-    // 啟動
-    init();
-
-</script>
-</body>
-</html>
+        <div class="map-zone" onclick="startChallenge('branch
