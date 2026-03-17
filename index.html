@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>企鵝森友會：南極小島冒險</title>
+    <title>企鵝森友會：南極分冊大冒險</title>
     <style>
         :root {
             --island-green: #a5d6a7;
@@ -224,10 +224,9 @@
 </div>
 
 <script>
-    // --- 嚴格擴充：每冊每區 20 題 ---
     const allQuestions = {
         1: { // 第一冊 (B1)
-            pinyin: [ // 10 漢選拼 + 10 拼選漢
+            pinyin: [
                 { q: "請問「舒服」的拼音是：", a: ["shū fu", "sū fu", "shū fǔ"], c: 0 },
                 { q: "請問「漂亮」的拼音是：", a: ["piào liàng", "biào liàng", "piǎo liàng"], c: 0 },
                 { q: "請問「喜歡」的拼音是：", a: ["xǐ huān", "qǐ huān", "xǐ huàn"], c: 0 },
@@ -249,7 +248,7 @@
                 { q: "請問拼音「niú ròu」對應的漢字是：", a: ["牛肉", "牛若", "牛奶"], c: 0 },
                 { q: "請問拼音「hē chá」對應的漢字是：", a: ["喝茶", "好茶", "荷茶"], c: 0 }
             ],
-            grammar: [ // 20 題
+            grammar: [ 
                 { q: "「這本書___我朋友借走了。」", a: ["把", "讓", "被"], c: 2 },
                 { q: "「我一下課，___去圖書館。」", a: ["就", "才", "剛"], c: 0 },
                 { q: "「哥哥吃得___弟弟多。」", a: ["比", "跟", "有"], c: 0 },
@@ -271,7 +270,7 @@
                 { q: "「我一下課，就___晚飯。」", a: ["去吃", "吃過", "吃了"], c: 0 },
                 { q: "「弟弟___了午餐沒有？」", a: ["吃", "買", "賣"], c: 0 }
             ],
-            usage: [ // 20 題
+            usage: [ 
                 { q: "我們明天早上八點在門口___吧。", a: ["見面", "看見", "認識"], c: 0 },
                 { q: "如果你想搭公車，最好準備一些___。", a: ["零錢", "薪水", "學費"], c: 0 },
                 { q: "這家店的牛肉麵真___！", a: ["好吃", "好看", "好聽"], c: 0 },
@@ -293,7 +292,7 @@
                 { q: "這件事我已經跟你說得很___了。", a: ["清楚", "說明", "內容"], c: 0 },
                 { q: "你的感冒___不嚴重？", a: ["算不具", "算不算", "不算"], c: 1 }
             ],
-            culture: [ // 20 題
+            culture: [ 
                 { q: "在台灣，看到朋友常用哪一句話打招呼？", a: ["吃飽了沒？", "你去哪裡？", "天氣很好。"], c: 0 },
                 { q: "台灣人說「去冰」是什麼意思？", a: ["不加冰塊", "加很多冰", "不加水"], c: 0 },
                 { q: "台灣的「博愛座」是給誰坐的？", a: ["有需要的人", "有錢的人", "年輕人"], c: 0 },
@@ -317,7 +316,7 @@
             ]
         },
         2: { // 第二冊 (B2)
-            pinyin: [ // 10 漢選拼 + 10 拼選漢
+            pinyin: [ 
                 { q: "請問「遵守」的正確拼音是：", a: ["zūn shǒu", "zhūn shǒu", "zūn sǒu"], c: 0 },
                 { q: "請問「畢業」的正確拼音是：", a: ["bì yè", "pì yè", "bǐ yè"], c: 0 },
                 { q: "請問「垃圾」的正確拼音是：", a: ["lè sè", "lā jī", "nè sè"], c: 0 },
@@ -339,7 +338,7 @@
                 { q: "請問拼音「xīn shuǐ」對應的漢字是：", a: ["薪水", "新水", "心碎"], c: 0 },
                 { q: "請問拼音「gào sù」對應的漢字是：", a: ["告訴", "高俗", "搞素"], c: 0 }
             ],
-            grammar: [ // 20 題
+            grammar: [ 
                 { q: "「這支手機___我弄壞了，真倒楣！」", a: ["被", "把", "讓"], c: 0 },
                 { q: "「學功夫要認真練習___。」", a: ["下去", "起來", "出來"], c: 0 },
                 { q: "「只要坐捷運，___能到台北很多地方。」", a: ["就", "才", "都"], c: 0 },
@@ -361,7 +360,7 @@
                 { q: "「他這半年，每個月___兩次簡訊給她。」", a: ["傳", "打", "寄"], c: 0 },
                 { q: "「這件事，我們一個一個___練習。」", a: ["地", "的", "得"], c: 0 }
             ],
-            usage: [ // 20 題
+            usage: [ 
                 { q: "「我想搬到學校___，上課比較方便。」", a: ["附近", "對面", "河邊"], c: 0 },
                 { q: "「這條路我走過很多次，絕對不會___。」", a: ["迷路", "跑步", "找路"], c: 0 },
                 { q: "「為了身體健康，我們應該少吃___的食物。」", a: ["油膩", "新鮮", "健康"], c: 0 },
@@ -383,7 +382,7 @@
                 { q: "「我想去銀行___一些錢。」", a: ["領", "拿", "提"], c: 0 },
                 { q: "「這個社區的環境很___。」", a: ["安靜", "熱鬧", "乾淨"], c: 0 }
             ],
-            culture: [ // 20 題
+            culture: [ 
                 { q: "「紅包」在台灣春節代表什麼意思？", a: ["壓歲錢/祝福", "買東西", "付房租"], c: 0 },
                 { q: "聽到垃圾車播「給愛麗絲」代表：", a: ["倒垃圾時間到了", "便利商店開了", "捷運來了"], c: 0 },
                 { q: "在台灣，參加婚禮通常會送：", a: ["紅包", "時鐘", "手錶"], c: 0 },
@@ -407,7 +406,7 @@
             ]
         },
         3: { // 第三冊 (B3)
-            pinyin: [ // 10 漢選拼 + 10 拼選漢
+            pinyin: [ 
                 { q: "請問「興奮」的拼音是：", a: ["xīng fèn", "xìng fèn", "xīng fēn"], c: 0 },
                 { q: "請問「說明」的拼音是：", a: ["shuō míng", "suō míng", "shuō mín"], c: 0 },
                 { q: "請問「清楚」的拼音是：", a: ["qīng chǔ", "qīng qǔ", "qīn xǔ"], c: 0 },
@@ -429,7 +428,7 @@
                 { q: "請問拼音「jìng zhēng」對應的漢字是：", a: ["競爭", "靜政", "景正"], c: 0 },
                 { q: "請問拼音「zhī míng」對應的漢字是：", a: ["知名", "知命", "志明"], c: 0 }
             ],
-            grammar: [ // 20 題
+            grammar: [ 
                 { q: "「我病得很重，明天___不能去上課了。」", a: ["既然", "恐怕", "居然"], c: 1 },
                 { q: "「考不考得上公職，還得___運氣。」", a: ["看", "對", "把"], c: 0 },
                 { q: "「___你已經感冒了，就留在家休息吧。」", a: ["既然", "居然", "雖然"], c: 0 },
@@ -451,7 +450,7 @@
                 { q: "「前天的演講真沒意思，我___睡著了。」", a: ["差一點", "多一點", "少一點"], c: 0 },
                 { q: "「他___去打工，就是回家照顧爺爺。」", a: ["不是", "除非", "要是"], c: 0 }
             ],
-            usage: [ // 20 題
+            usage: [ 
                 { q: "這份報告請在一個星期___交給我。", a: ["以內", "以前", "以後"], c: 0 },
                 { q: "這份工作需要常常與人___，要有耐心。", a: ["溝通", "安排", "邀請"], c: 0 },
                 { q: "他的成功，很大一部分是___運氣。", a: ["靠", "看", "對"], c: 0 },
@@ -473,7 +472,7 @@
                 { q: "我已經四個月沒下雨，快沒水___了。", a: ["喝", "洗", "用"], c: 0 },
                 { q: "發生什麼事？你快說___。", a: ["清楚", "說明", "內容"], c: 0 }
             ],
-            culture: [ // 20 題
+            culture: [ 
                 { q: "「鳳梨酥」的閩南語諧音代表：", a: ["旺來", "平安", "發財"], c: 0 },
                 { q: "平溪最有名的祈福活動是放：", a: ["天燈", "煙火", "風箏"], c: 0 },
                 { q: "去醫院看朋友，通常會帶：", a: ["水果或花", "垃圾", "電腦"], c: 0 },
@@ -665,12 +664,14 @@
     }
 
     function closeModal() { document.getElementById('quiz-overlay').classList.add('hidden'); }
-    function save() { localStorage.setItem('penguin_island_massive_v8', JSON.stringify(state)); }
+    function save() { localStorage.setItem('penguin_island_massive_v9', JSON.stringify(state)); }
 
     function endGameFlow() {
         if(!confirm("要結束冒險，拍一張大合照嗎？")) return;
         document.getElementById('quiz-overlay').classList.remove('hidden');
         document.getElementById('quiz-title').innerText = "📸 你的小島！";
+        document.getElementById('quiz-q').innerText = ""; 
+        document.getElementById('quiz-msg').innerText = "";
         document.getElementById('quiz-options').innerHTML = "";
         document.getElementById('invite-area').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
@@ -712,16 +713,16 @@
             ctx.fillText(icon, 70 + (i % 6) * 45, 230 + (Math.floor(i/6) * 30)); 
         });
 
-        // 加上島嶼名牌 (只顯示OO的南極小島)
+        // 加上島嶼名牌 (只顯示OO的南極小島，不帶括號)
         ctx.fillStyle = "#01579b"; 
         ctx.font = "bold 24px 'Microsoft JhengHei'"; 
         ctx.textAlign = "center";
         ctx.fillText(`${state.name} 的南極小島`, 190, 40);
         
-        localStorage.removeItem('penguin_island_massive_v8');
+        localStorage.removeItem('penguin_island_massive_v9');
     }
 
-    const saved = localStorage.getItem('penguin_island_massive_v8');
+    const saved = localStorage.getItem('penguin_island_massive_v9');
     if(saved) {
         state = JSON.parse(saved);
         if(state.name) {
