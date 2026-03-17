@@ -9,14 +9,13 @@
             --island-green: #a5d6a7;
             --ocean-blue: #81d4fa;
             --wood-brown: #8d6e63;
-            --sand-beige: #fff9c4;
             --deep-blue: #01579b;
             --penguin-black: #263238;
         }
 
         body {
             font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
-            background-color: #e1f5fe;
+            background-color: #f0faff;
             margin: 0;
             display: flex;
             justify-content: center;
@@ -32,7 +31,7 @@
             background: #ffffff;
             border-radius: 30px;
             border: 10px solid #fff;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.1);
             position: relative;
             display: flex;
             flex-direction: column;
@@ -75,7 +74,7 @@
 
         .res-group { display: flex; gap: 12px; font-size: 14px; }
 
-        /* 地圖區域 */
+        /* 遊戲畫面 */
         #game-screen {
             flex-grow: 1;
             display: grid;
@@ -83,7 +82,7 @@
             grid-template-rows: 1fr 1fr;
             gap: 20px;
             padding: 25px;
-            background: linear-gradient(to bottom, #e1f5fe, #ffffff);
+            background: linear-gradient(to bottom, #f0faff, #ffffff);
         }
 
         .stage-card {
@@ -99,11 +98,11 @@
         }
 
         .stage-card:hover { transform: scale(1.03); background: #f1f8e9; }
-        .stage-title { margin-top: 10px; font-weight: bold; color: #2e7d32; }
+        .stage-title { margin-top: 10px; font-weight: bold; color: #2e7d32; text-align: center; font-size: 15px; }
 
         .icon-wrap { font-size: 40px; margin-bottom: 5px; }
 
-        /* 底部建築 */
+        /* 進度條 */
         #build-area { padding: 20px; background: #f9f9f9; text-align: center; border-top: 2px solid #eee; }
         .progress-container { width: 100%; height: 15px; background: #eee; border-radius: 10px; margin: 10px 0; overflow: hidden; }
         #progress-bar { width: 0%; height: 100%; background: var(--island-green); transition: 0.8s; }
@@ -113,7 +112,7 @@
         .modal { background: white; padding: 30px; border-radius: 25px; width: 85%; max-width: 450px; text-align: center; }
         
         .intro-text {
-            background: #f1f8e9; padding: 15px; border-radius: 15px; color: #33691e; font-size: 15px; line-height: 1.6; margin-bottom: 20px; border-left: 5px solid var(--island-green); text-align: left;
+            background: #e3f2fd; padding: 20px; border-radius: 15px; color: #01579b; font-size: 15px; line-height: 1.8; margin-bottom: 20px; border-left: 8px solid var(--ocean-blue); text-align: left;
         }
 
         .btn-main { background: var(--deep-blue); color: white; border: none; padding: 12px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
@@ -122,7 +121,7 @@
         .invite-btns { display: flex; gap: 10px; margin-top: 20px; }
         .btn-invite { flex: 1; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 18px; }
         .btn-yes { background: var(--island-green); color: #1b5e20; }
-        .btn-no { background: #ef9a9a; color: #b71c1c; }
+        .btn-no { background: #ffcdd2; color: #b71c1c; }
 
         #final-canvas { border: 5px solid var(--island-green); margin-top: 10px; display: none; background: white; border-radius: 15px; }
         .hidden { display: none !important; }
@@ -139,8 +138,8 @@
                 「你是一隻企鵝，也是這座島的島主。你要透過冒險裝飾這座島，也別忘了找一些朋友、種種植物，完成你心目中的美好的家！」
             </div>
             <p>請為小島管理員取個名字：</p>
-            <input type="text" id="player-input" style="width:80%; padding:10px; text-align:center; border:2px solid var(--island-green); border-radius:10px; font-size:18px;" placeholder="名字">
-            <button class="btn-main" onclick="startGame()">開始建設小島</button>
+            <input type="text" id="player-input" style="width:80%; padding:10px; text-align:center; border:2px solid var(--ocean-blue); border-radius:10px; font-size:18px;" placeholder="名字">
+            <button class="btn-main" onclick="startGame()">開始建設</button>
         </div>
     </div>
 
@@ -153,7 +152,7 @@
     <div id="hud" class="hidden">
         <div>🏝️ <span id="display-name">---</span></div>
         <div class="res-group">
-            <span>🌿 <span id="r-mat">0</span></span>
+            <span>✨ <span id="r-knowledge">0</span></span>
             <span>👥 <span id="r-ani">0</span></span>
             <span>🌸 <span id="r-pla">0</span></span>
         </div>
@@ -161,26 +160,26 @@
     </div>
 
     <div id="game-screen">
-        <div class="stage-card" onclick="triggerQuiz('branch')">
-            <div class="icon-wrap">🪵</div>
-            <div class="stage-title">收集樹枝</div>
+        <div class="stage-card" onclick="triggerQuiz('grammar')">
+            <div class="icon-wrap">📖</div>
+            <div class="stage-title">常用語法</div>
         </div>
         <div class="stage-card" onclick="triggerQuiz('leaf')">
             <div class="icon-wrap">🍃</div>
-            <div class="stage-title">採集樹葉</div>
+            <div class="stage-title">詞彙谷</div>
         </div>
-        <div class="stage-card" onclick="triggerQuiz('stone')">
-            <div class="icon-wrap">🪨</div>
-            <div class="stage-title">挖掘石頭</div>
+        <div class="stage-card" onclick="triggerQuiz('market')">
+            <div class="icon-wrap">🛒</div>
+            <div class="stage-title">超市常用字</div>
         </div>
-        <div class="stage-card" onclick="triggerQuiz('penguin')">
-            <div class="icon-wrap">🐧</div>
+        <div class="stage-card" onclick="triggerQuiz('culture')">
+            <div class="icon-wrap">🏮</div>
             <div class="stage-title">拜訪鄰居</div>
         </div>
     </div>
 
     <div id="build-area">
-        <div id="house-status" style="font-weight:bold; color:#2e7d32;">小島進度：露天帳篷</div>
+        <div id="house-status" style="font-weight:bold; color:#2e7d32;">進度：露天帳篷</div>
         <div class="progress-container"><div id="progress-bar"></div></div>
         <button class="btn-main" onclick="tryBuild()" style="width:auto; padding:5px 40px;">升級房屋</button>
     </div>
@@ -188,46 +187,63 @@
     <div id="quiz-overlay" class="overlay hidden">
         <div class="modal">
             <h3 id="quiz-title" style="margin:0; color:#2e7d32;">小島任務</h3>
-            <p id="quiz-q" style="font-size: 18px; margin: 20px 0; line-height: 1.5; text-align: left;"></p>
+            <p id="quiz-q" style="font-size: 18px; margin: 20px 0; line-height: 1.6; text-align: left;"></p>
             <div id="quiz-options"></div>
             
             <div id="invite-area" class="hidden">
-                <p id="invite-text" style="font-size: 20px; font-weight: bold; color: var(--deep-blue);"></p>
+                <p id="invite-text" style="font-size: 19px; font-weight: bold; color: var(--deep-blue);"></p>
                 <div class="invite-btns">
                     <button class="btn-invite btn-yes" onclick="handleInvite(true)">要</button>
                     <button class="btn-invite btn-no" onclick="handleInvite(false)">不要</button>
                 </div>
             </div>
 
-            <p id="quiz-msg" style="font-weight:bold; margin-top:15px;"></p>
+            <p id="quiz-msg" style="font-weight:bold; margin-top:15px; min-height: 24px;"></p>
             <canvas id="final-canvas" width="380" height="380"></canvas>
             <button id="next-btn" class="btn-main hidden" onclick="closeModal()">繼續</button>
-            <button id="restart-btn" class="btn-main hidden" onclick="location.reload()" style="background:#555;">重新開始</button>
+            <button id="restart-btn" class="btn-main hidden" onclick="location.reload()" style="background:#666;">重新開始</button>
         </div>
     </div>
 </div>
 
 <script>
     const questions = {
-        branch: [{ q: "「這份文件我已經___主管列印好了。」", a: ["讓", "被", "把"], c: 1 }, { q: "學中文越學___有趣。", a: ["就", "越", "才"], c: 1 }],
-        leaf: [{ q: "在台灣超商買飲料，如果不想加糖可以說：", a: ["無糖", "半糖", "全糖"], c: 0 }, { q: "這雙鞋子雖然很貴，___品質很好。", a: ["但是", "因為", "所以"], c: 0 }],
-        stone: [{ q: "在台灣，博愛座主要是優先給誰坐的？", a: ["有錢的人", "有需要的人", "小朋友"], c: 1 }, { q: "聽到垃圾車播放「給愛麗絲」的音樂代表：", a: ["垃圾車來了", "便利商店開了", "要升旗了"], c: 0 }],
-        penguin: [{ q: "情境題：你在圖書館想請人安靜一點，你會說：", a: ["請安靜一點", "你很大聲", "不要說話"], c: 0 }],
+        grammar: [
+            { q: "「我已經___垃圾倒好了。」", a: ["讓", "被", "把"], c: 2 },
+            { q: "這本書___我朋友借走了。", a: ["被", "讓", "給"], c: 0 },
+            { q: "他不但功課好，___非常愛運動。", a: ["而是", "而且", "所以"], c: 1 },
+            { q: "雖然天氣很冷，他___堅持每天跑步。", a: ["才", "就", "還是"], c: 2 }
+        ],
+        leaf: [
+            { q: "明天我們要去爬山，請記得___穿運動鞋。", a: ["準時", "安排", "必須"], c: 2 },
+            { q: "為了學好華語，我常去網路上___學習資料。", a: ["安排", "搜尋", "申請"], c: 1 },
+            { q: "這份工作需要常常與人___，要有耐心。", a: ["邀請", "溝通", "考慮"], c: 1 }
+        ],
+        market: [
+            { q: "結帳的時候，店員通常會問你要不要印___？", a: ["發票", "信封", "筆記"], c: 0 },
+            { q: "在超市看到「買一送一」，代表你可以得到幾份？", a: ["一份", "兩份", "三份"], c: 1 },
+            { q: "買飲料的時候，要注意看瓶子上的「有效___」。", a: ["日期", "時候", "號碼"], c: 0 },
+            { q: "結帳時如果你沒有帶現金，你可以選擇___。", a: ["刷卡", "寫信", "列印"], c: 0 }
+        ],
+        culture: [
+            { q: "鄰居小華請你喝珍珠奶茶，請問裡面的珍珠通常是由什麼製成的？", a: ["地瓜粉（粉圓）", "麵粉", "大米"], c: 0 },
+            { q: "鄰居阿德告訴你，台灣最高的建築物是？", a: ["台北101", "玉山", "台中歌劇院"], c: 0 },
+            { q: "你想去體驗台灣的庶民美食，應該晚上去逛：", a: ["美術館", "夜市", "圖書館"], c: 1 }
+        ],
         animal: [
-            { q: "請問「tù zi」是哪一個漢字？", a: ["肚子", "兔子", "筷子"], c: 1, icon: "🐰", name: "小兔" },
-            { q: "請問「gǒu gou」是哪一個漢字？", a: ["狗狗", "可口", "口渴"], c: 0, icon: "🐶", name: "阿狗" },
-            { q: "請問「貓咪」的讀音（拼音）是？", a: ["máo mǐ", "miāo miāo", "māo mī"], c: 2, icon: "🐱", name: "喵喵" }
+            { q: "請問拼音「tù zi」對應的漢字是？", a: ["肚子", "兔子", "筷子"], c: 1, icon: "🐰", name: "小兔" },
+            { q: "請問拼音「gǒu gou」對應的漢字是？", a: ["狗狗", "可口", "口渴"], c: 0, icon: "🐶", name: "阿狗" },
+            { q: "「熊貓」的漢拼是？", a: ["xióng māo", "sōng shǔ", "shī zi"], c: 0, icon: "🐼", name: "圓圓" }
         ],
         plant: [
-            { q: "「xiān zhǎng zhǎng」是哪一種植物？", a: ["向日葵", "仙人掌", "玫瑰花"], c: 1, icon: "🌵", name: "仙人掌" },
-            { q: "聖誕節會裝飾「shèng dàn shù」：", a: ["聖誕樹", "蘋果樹", "椰子樹"], c: 0, icon: "🌲", name: "聖誕樹" }
-        ],
-        event: [{ q: "【事件】在台灣，我們稱呼便利商店為：", a: ["超商", "便利店", "雜貨店"], c: 0 }]
+            { q: "請問「xiān zhǎng zhǎng」是哪一種植物？", a: ["向日葵", "仙人掌", "玫瑰花"], c: 1, icon: "🌵", name: "仙人掌" },
+            { q: "「聖誕樹」的漢拼是？", a: ["shèng dàn shù", "píng guǒ shù", "liǔ shù"], c: 0, icon: "🌲", name: "聖誕樹" }
+        ]
     };
 
     let state = {
         name: "",
-        res: { mat: 0, ani: 0, pla: 0 },
+        res: { knowledge: 0, ani: 0, pla: 0 },
         lvl: 0,
         names: ["露天帳篷 ⛺", "溫馨木屋 🪵", "雙層別墅 🏡", "夢幻大堡壘 🏰"],
         req: [0, 3, 8, 15],
@@ -236,7 +252,13 @@
         currentAnimal: null
     };
 
-    const typeToName = { "branch": "樹枝", "leaf": "樹葉", "stone": "石頭", "penguin": "材料" };
+    // --- 修改處：回饋語映射表 ---
+    const typeFeedback = {
+        "grammar": "樹枝",
+        "leaf": "樹葉",
+        "market": "石頭",
+        "culture": "朋友" // 用於拜訪鄰居
+    };
 
     function startGame() {
         const n = document.getElementById('player-input').value.trim();
@@ -249,13 +271,13 @@
 
     function updateUI() {
         document.getElementById('display-name').innerText = state.name;
-        document.getElementById('r-mat').innerText = state.res.mat;
+        document.getElementById('r-knowledge').innerText = state.res.knowledge;
         document.getElementById('r-ani').innerText = state.res.ani;
         document.getElementById('r-pla').innerText = state.res.pla;
         const target = state.req[state.lvl+1] || state.req[state.lvl];
-        const p = state.lvl >= 3 ? 100 : Math.min((state.res.mat/target)*100, 100);
+        const p = state.lvl >= 3 ? 100 : Math.min((state.res.knowledge/target)*100, 100);
         document.getElementById('progress-bar').style.width = p + "%";
-        document.getElementById('house-status').innerText = `小島進度：${state.names[state.lvl]} (${state.res.mat}/${target})`;
+        document.getElementById('house-status').innerText = `小島進度：${state.names[state.lvl]} (${state.res.knowledge}/${target})`;
         if(state.lvl >= 1) {
             document.getElementById('tab-animal').className = "nav-tab tab-unlocked";
             document.getElementById('tab-plant').className = "nav-tab tab-unlocked";
@@ -263,13 +285,13 @@
     }
 
     function triggerQuiz(type) {
-        if(Math.random() < 0.15) return triggerEvent();
-        const qList = (type === 'penguin') ? questions.penguin : questions[type];
+        const qList = questions[type];
         const qData = qList[Math.floor(Math.random()*qList.length)];
-        showModal("採集挑戰", qData, (isCorrect) => {
+        showModal("地圖挑戰", qData, (isCorrect) => {
             if(isCorrect) {
-                state.res.mat++;
-                document.getElementById('quiz-msg').innerText = `✨ 太棒了！你獲得了${typeToName[type]}！`;
+                state.res.knowledge++;
+                const item = typeFeedback[type];
+                document.getElementById('quiz-msg').innerText = type === 'culture' ? `✨ 太棒了！成功拜訪了朋友！` : `✨ 太棒了！你獲得了${item}！`;
             }
             save(); updateUI();
         });
@@ -278,23 +300,20 @@
     function startSpecial(mode) {
         if(state.lvl < 1) return alert("請先升級房屋再解鎖特別任務！");
         const qData = questions[mode][Math.floor(Math.random()*questions[mode].length)];
-        
         showModal(mode === 'animal' ? "招募島民" : "種種植物", qData, (isCorrect) => {
             if(isCorrect) {
                 if(mode === 'animal') {
                     state.currentAnimal = qData;
                     document.getElementById('quiz-options').classList.add('hidden');
                     document.getElementById('invite-area').classList.remove('hidden');
-                    document.getElementById('invite-text').innerText = `太棒了！發現了${qData.name}${qData.icon}，要找他來當島民嗎？`;
+                    document.getElementById('invite-text').innerText = `發現了新夥伴 ${qData.icon} ${qData.name}！要邀請他來當島民嗎？`;
                 } else {
                     state.res.pla++;
                     state.unlockedPlants.push(qData.icon);
-                    document.getElementById('quiz-msg').innerText = `✨ 太棒了！你獲得了${qData.name}！`;
+                    document.getElementById('quiz-msg').innerText = `✨ 太棒了！你獲得了樹葉！`; // 植物視為獲得樹葉
                     save(); updateUI();
                 }
-            } else {
-                save(); updateUI();
-            }
+            } else save(); updateUI();
         });
     }
 
@@ -304,10 +323,10 @@
         if(wantIt) {
             state.res.ani++;
             state.unlockedAnimals.push(state.currentAnimal.icon);
-            msg.innerText = `🎊 ${state.currentAnimal.name} 正式成為你的島民了！`;
+            msg.innerText = `🎊 成功拜訪了朋友！${state.currentAnimal.name} 加入了小島。`;
             msg.style.color = "green";
         } else {
-            msg.innerText = `企鵝島主：期待下次再見到${state.currentAnimal.name}！`;
+            msg.innerText = `島主：期待下次再見到${state.currentAnimal.name}！`;
             msg.style.color = "orange";
         }
         document.getElementById('next-btn').classList.remove('hidden');
@@ -337,7 +356,7 @@
                     callback(true);
                     if(title !== "招募島民") document.getElementById('next-btn').classList.remove('hidden');
                 } else {
-                    document.getElementById('quiz-msg').innerText = "❌ 失敗！答案是：" + data.a[data.c];
+                    document.getElementById('quiz-msg').innerText = "❌ 答錯了！正確答案是：" + data.a[data.c];
                     document.getElementById('quiz-msg').style.color = "red";
                     document.getElementById('next-btn').classList.remove('hidden');
                     callback(false);
@@ -348,27 +367,27 @@
     }
 
     function tryBuild() {
-        if(state.lvl >= 3) return alert("小島房屋已經最高等級了！");
-        if(state.res.mat >= state.req[state.lvl+1]) {
-            state.lvl++; alert(`房屋變成了：${state.names[state.lvl]}！🏠`);
+        if(state.lvl >= 3) return alert("已達最高等級！");
+        if(state.res.knowledge >= state.req[state.lvl+1]) {
+            state.lvl++; alert(`房屋升級為：${state.names[state.lvl]}！🏠`);
             save(); updateUI();
-        } else alert(`材料還差 ${state.req[state.lvl+1] - state.res.mat} 個。`);
+        } else alert(`材料還差 ${state.req[state.lvl+1] - state.res.knowledge} 點知識才能升級。`);
     }
 
     function closeModal() { document.getElementById('quiz-overlay').classList.add('hidden'); }
-    function save() { localStorage.setItem('penguin_island_v3', JSON.stringify(state)); }
+    function save() { localStorage.setItem('penguin_crossing_v5', JSON.stringify(state)); }
 
     function endGameFlow() {
-        if(!confirm("要結束建設並拍一張大合照嗎？")) return;
+        if(!confirm("要結束建設並拍照留念嗎？")) return;
         document.getElementById('quiz-overlay').classList.remove('hidden');
-        document.getElementById('quiz-title').innerText = "📸 小島大合照";
+        document.getElementById('quiz-title').innerText = "📸 小島全體大合照";
         document.getElementById('quiz-options').innerHTML = "";
         document.getElementById('invite-area').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
         document.getElementById('restart-btn').classList.remove('hidden');
         const cvs = document.getElementById('final-canvas'); cvs.style.display = "block";
         const ctx = cvs.getContext('2d');
-        ctx.fillStyle = "#81d4fa"; ctx.fillRect(0,0,380,380);
+        ctx.fillStyle = "#e1f5fe"; ctx.fillRect(0,0,380,380);
         ctx.fillStyle = "#f1f8e9"; ctx.beginPath(); ctx.arc(190, 450, 250, 0, Math.PI*2); ctx.fill();
         ctx.fillStyle = "#8d6e63"; ctx.fillRect(140, 180, 100, 80);
         ctx.fillStyle = "#d84315"; ctx.beginPath(); ctx.moveTo(130,180); ctx.lineTo(190,130); ctx.lineTo(250,180); ctx.fill();
@@ -378,10 +397,10 @@
         state.unlockedPlants.forEach((icon, i) => { ctx.fillText(icon, 200 + (i % 4) * 40, 250 + (Math.floor(i/4) * 35)); });
         ctx.fillStyle = "#01579b"; ctx.font = "bold 20px 'Microsoft JhengHei'"; ctx.textAlign = "center";
         ctx.fillText(`${state.name} 的小島紀念`, 190, 40);
-        localStorage.removeItem('penguin_island_v3');
+        localStorage.removeItem('penguin_crossing_v5');
     }
 
-    const saved = localStorage.getItem('penguin_island_v3');
+    const saved = localStorage.getItem('penguin_crossing_v5');
     if(saved) {
         state = JSON.parse(saved);
         if(state.name) {
