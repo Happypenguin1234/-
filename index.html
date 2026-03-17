@@ -112,22 +112,18 @@
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 100; }
         .modal { background: white; padding: 30px; border-radius: 25px; width: 85%; max-width: 450px; text-align: center; }
         
-        /* 指導語樣式 */
         .intro-text {
-            background: #f1f8e9;
-            padding: 15px;
-            border-radius: 15px;
-            color: #33691e;
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            border-left: 5px solid var(--island-green);
-            text-align: left;
+            background: #f1f8e9; padding: 15px; border-radius: 15px; color: #33691e; font-size: 15px; line-height: 1.6; margin-bottom: 20px; border-left: 5px solid var(--island-green); text-align: left;
         }
 
         .btn-main { background: var(--deep-blue); color: white; border: none; padding: 12px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
         .btn-option { background: #f1f8e9; border: 2px solid var(--island-green); padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; margin: 6px 0; font-size: 16px; font-weight: bold; color: #2e7d32; }
         
+        .invite-btns { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-invite { flex: 1; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 18px; }
+        .btn-yes { background: var(--island-green); color: #1b5e20; }
+        .btn-no { background: #ef9a9a; color: #b71c1c; }
+
         #final-canvas { border: 5px solid var(--island-green); margin-top: 10px; display: none; background: white; border-radius: 15px; }
         .hidden { display: none !important; }
     </style>
@@ -139,11 +135,9 @@
         <div class="modal">
             <div style="font-size: 50px; margin-bottom: 10px;">🐧</div>
             <h2>企鵝森友會：南極小島冒險</h2>
-            
             <div class="intro-text">
                 「你是一隻企鵝，也是這座島的島主。你要透過冒險裝飾這座島，也別忘了找一些朋友、種種植物，完成你心目中的美好的家！」
             </div>
-
             <p>請為小島管理員取個名字：</p>
             <input type="text" id="player-input" style="width:80%; padding:10px; text-align:center; border:2px solid var(--island-green); border-radius:10px; font-size:18px;" placeholder="名字">
             <button class="btn-main" onclick="startGame()">開始建設小島</button>
@@ -196,10 +190,17 @@
             <h3 id="quiz-title" style="margin:0; color:#2e7d32;">小島任務</h3>
             <p id="quiz-q" style="font-size: 18px; margin: 20px 0; line-height: 1.5; text-align: left;"></p>
             <div id="quiz-options"></div>
+            
+            <div id="invite-area" class="hidden">
+                <p id="invite-text" style="font-size: 20px; font-weight: bold; color: var(--deep-blue);"></p>
+                <div class="invite-btns">
+                    <button class="btn-invite btn-yes" onclick="handleInvite(true)">要</button>
+                    <button class="btn-invite btn-no" onclick="handleInvite(false)">不要</button>
+                </div>
+            </div>
+
             <p id="quiz-msg" style="font-weight:bold; margin-top:15px;"></p>
-            
             <canvas id="final-canvas" width="380" height="380"></canvas>
-            
             <button id="next-btn" class="btn-main hidden" onclick="closeModal()">繼續</button>
             <button id="restart-btn" class="btn-main hidden" onclick="location.reload()" style="background:#555;">重新開始</button>
         </div>
@@ -207,35 +208,21 @@
 </div>
 
 <script>
-    // --- 題庫與邏輯 ---
     const questions = {
-        branch: [
-            { q: "「這份文件我已經___主管列印好了。」", a: ["讓", "被", "把"], c: 2 },
-            { q: "學中文越學___有趣。", a: ["就", "越", "才"], c: 1 }
-        ],
-        leaf: [
-            { q: "在台灣超商買飲料，如果不想加糖可以說：", a: ["無糖", "半糖", "全糖"], c: 0 },
-            { q: "這雙鞋子雖然很貴，___品質很好。", a: ["但是", "因為", "所以"], c: 0 }
-        ],
-        stone: [
-            { q: "在台灣，博愛座主要是優先給誰坐的？", a: ["有錢的人", "有需要的人", "小朋友"], c: 1 },
-            { q: "聽到垃圾車播放「給愛麗絲」的音樂代表：", a: ["垃圾車來了", "便利商店開了", "要升旗了"], c: 0 }
-        ],
-        penguin: [
-            { q: "情境題：你在圖書館想請人安靜一點，你會說：", a: ["請安靜一點", "你很大聲", "不要說話"], c: 0 }
-        ],
+        branch: [{ q: "「這份文件我已經___主管列印好了。」", a: ["讓", "被", "把"], c: 2 }, { q: "學中文越學___有趣。", a: ["就", "越", "才"], c: 1 }],
+        leaf: [{ q: "在台灣超商買飲料，如果不想加糖可以說：", a: ["無糖", "半糖", "全糖"], c: 0 }, { q: "這雙鞋子雖然很貴，___品質很好。", a: ["但是", "因為", "所以"], c: 0 }],
+        stone: [{ q: "在台灣，博愛座主要是優先給誰坐的？", a: ["有錢的人", "有需要的人", "小朋友"], c: 1 }, { q: "聽到垃圾車播放「給愛麗絲」的音樂代表：", a: ["垃圾車來了", "便利商店開了", "要升旗了"], c: 0 }],
+        penguin: [{ q: "情境題：你在圖書館想請人安靜一點，你會說：", a: ["請安靜一點", "你很大聲", "不要說話"], c: 0 }],
         animal: [
-            { q: "這是一隻有長長耳朵、喜歡吃紅蘿蔔的小動物：", a: ["貓咪", "兔子", "大象"], c: 1 },
-            { q: "這是人類最好的朋友，會幫你看家：", a: ["狗狗", "老虎", "海龜"], c: 0 },
-            { q: "這是一隻長脖子、身上有斑點的動物：", a: ["獅子", "猴子", "長頸鹿"], c: 2 }
+            { q: "請問「tù zi」是哪一個漢字？", a: ["肚子", "兔子", "筷子"], c: 1, icon: "🐰", name: "小兔" },
+            { q: "請問「gǒu gou」是哪一個漢字？", a: ["狗狗", "可口", "口渴"], c: 0, icon: "🐶", name: "阿狗" },
+            { q: "請問「貓咪」的讀音（拼音）是？", a: ["máo mǐ", "miāo miāo", "māo mī"], c: 2, icon: "🐱", name: "喵喵" }
         ],
         plant: [
-            { q: "這是一種長在沙漠、身上有很多刺的植物：", a: ["玫瑰", "仙人掌", "向日葵"], c: 1 },
-            { q: "聖誕節的時候，大家會裝飾綠色的：", a: ["聖誕樹", "竹子", "草地"], c: 0 }
+            { q: "「xiān zhǎng zhǎng」是哪一種植物？", a: ["向日葵", "仙人掌", "玫瑰花"], c: 1, icon: "🌵", name: "仙人掌" },
+            { q: "聖誕節會裝飾「shèng dàn shù」：", a: ["聖誕樹", "蘋果樹", "椰子樹"], c: 0, icon: "🌲", name: "聖誕樹" }
         ],
-        event: [
-            { q: "【事件】在台灣，我們稱呼便利商店為：", a: ["超商", "便利店", "雜貨店"], c: 0 }
-        ]
+        event: [{ q: "【事件】在台灣，我們稱呼便利商店為：", a: ["超商", "便利店", "雜貨店"], c: 0 }]
     };
 
     let state = {
@@ -245,15 +232,15 @@
         names: ["露天帳篷 ⛺", "溫馨木屋 🪵", "雙層別墅 🏡", "夢幻大堡壘 🏰"],
         req: [0, 3, 8, 15],
         unlockedAnimals: [],
-        unlockedPlants: []
+        unlockedPlants: [],
+        currentAnimal: null
     };
 
-    const animalIcons = ["🐰", "🐶", "🐱", "🐘", "🦒"];
-    const plantIcons = ["🌸", "🌵", "🌲", "🌻", "🍎"];
+    const typeToName = { "branch": "樹枝", "leaf": "樹葉", "stone": "石頭", "penguin": "材料" };
 
     function startGame() {
         const n = document.getElementById('player-input').value.trim();
-        if(!n) return alert("請輸入管理員名字！");
+        if(!n) return alert("請輸入名字！");
         state.name = n;
         document.getElementById('name-overlay').classList.add('hidden');
         document.getElementById('hud').classList.remove('hidden');
@@ -265,12 +252,10 @@
         document.getElementById('r-mat').innerText = state.res.mat;
         document.getElementById('r-ani').innerText = state.res.ani;
         document.getElementById('r-pla').innerText = state.res.pla;
-
         const target = state.req[state.lvl+1] || state.req[state.lvl];
         const p = state.lvl >= 3 ? 100 : Math.min((state.res.mat/target)*100, 100);
         document.getElementById('progress-bar').style.width = p + "%";
         document.getElementById('house-status').innerText = `小島進度：${state.names[state.lvl]} (${state.res.mat}/${target})`;
-
         if(state.lvl >= 1) {
             document.getElementById('tab-animal').className = "nav-tab tab-unlocked";
             document.getElementById('tab-plant').className = "nav-tab tab-unlocked";
@@ -282,7 +267,10 @@
         const qList = (type === 'penguin') ? questions.penguin : questions[type];
         const qData = qList[Math.floor(Math.random()*qList.length)];
         showModal("採集挑戰", qData, (isCorrect) => {
-            if(isCorrect) state.res.mat++;
+            if(isCorrect) {
+                state.res.mat++;
+                document.getElementById('quiz-msg').innerText = `✨ 太棒了！你獲得了${typeToName[type]}！`;
+            }
             save(); updateUI();
         });
     }
@@ -290,28 +278,41 @@
     function startSpecial(mode) {
         if(state.lvl < 1) return alert("請先升級房屋再解鎖特別任務！");
         const qData = questions[mode][Math.floor(Math.random()*questions[mode].length)];
+        
         showModal(mode === 'animal' ? "招募島民" : "種種植物", qData, (isCorrect) => {
             if(isCorrect) {
                 if(mode === 'animal') {
-                    state.res.ani++;
-                    state.unlockedAnimals.push(animalIcons[Math.floor(Math.random()*animalIcons.length)]);
+                    state.currentAnimal = qData;
+                    document.getElementById('quiz-options').classList.add('hidden');
+                    document.getElementById('invite-area').classList.remove('hidden');
+                    document.getElementById('invite-text').innerText = `太棒了！發現了${qData.name}${qData.icon}，要找他來當島民嗎？`;
                 } else {
                     state.res.pla++;
-                    state.unlockedPlants.push(plantIcons[Math.floor(Math.random()*plantIcons.length)]);
+                    state.unlockedPlants.push(qData.icon);
+                    document.getElementById('quiz-msg').innerText = `✨ 太棒了！你獲得了${qData.name}！`;
+                    save(); updateUI();
                 }
+            } else {
+                save(); updateUI();
             }
-            save(); updateUI();
         });
     }
 
-    function triggerEvent() {
-        showModal("⚠️ 緊急事件！", questions.event[0], (isCorrect) => {
-            if(!isCorrect) {
-                state.res.mat = Math.max(0, state.res.mat - 1);
-                alert("挑戰失敗，損失了一些材料...");
-            }
-            save(); updateUI();
-        });
+    function handleInvite(wantIt) {
+        const msg = document.getElementById('quiz-msg');
+        document.getElementById('invite-area').classList.add('hidden');
+        if(wantIt) {
+            state.res.ani++;
+            state.unlockedAnimals.push(state.currentAnimal.icon);
+            msg.innerText = `🎊 ${state.currentAnimal.name} 正式成為你的島民了！`;
+            msg.style.color = "green";
+        } else {
+            msg.innerText = `企鵝島主：期待下次再見到${state.currentAnimal.name}！`;
+            msg.style.color = "orange";
+        }
+        document.getElementById('next-btn').classList.remove('hidden');
+        state.currentAnimal = null;
+        save(); updateUI();
     }
 
     function showModal(title, data, callback) {
@@ -320,7 +321,9 @@
         document.getElementById('quiz-q').innerText = data.q;
         document.getElementById('quiz-msg').innerText = "";
         document.getElementById('next-btn').classList.add('hidden');
+        document.getElementById('invite-area').classList.add('hidden');
         const optDiv = document.getElementById('quiz-options');
+        optDiv.classList.remove('hidden');
         optDiv.innerHTML = "";
         data.a.forEach((txt, i) => {
             const b = document.createElement('button');
@@ -330,45 +333,40 @@
                 const all = optDiv.querySelectorAll('button');
                 all.forEach(btn => btn.disabled = true);
                 if(i === data.c) {
-                    document.getElementById('quiz-msg').innerText = "✨ 太棒了！任務成功。";
                     document.getElementById('quiz-msg').style.color = "green";
                     callback(true);
+                    if(title !== "招募島民") document.getElementById('next-btn').classList.remove('hidden');
                 } else {
                     document.getElementById('quiz-msg').innerText = "❌ 失敗！答案是：" + data.a[data.c];
                     document.getElementById('quiz-msg').style.color = "red";
+                    document.getElementById('next-btn').classList.remove('hidden');
                     callback(false);
                 }
-                document.getElementById('next-btn').classList.remove('hidden');
             };
             optDiv.appendChild(b);
         });
     }
 
     function tryBuild() {
-        if(state.lvl >= 3) return alert("小島房屋已經建設到最高等級了！");
+        if(state.lvl >= 3) return alert("小島房屋已經最高等級了！");
         if(state.res.mat >= state.req[state.lvl+1]) {
-            state.lvl++;
-            alert(`恭喜！${state.name} 管理員的房屋升級為：${state.names[state.lvl]}！🏠`);
+            state.lvl++; alert(`房屋變成了：${state.names[state.lvl]}！🏠`);
             save(); updateUI();
-        } else {
-            alert(`材料還不夠喔，還差 ${state.req[state.lvl+1] - state.res.mat} 個材料。`);
-        }
+        } else alert(`材料還差 ${state.req[state.lvl+1] - state.res.mat} 個。`);
     }
 
     function closeModal() { document.getElementById('quiz-overlay').classList.add('hidden'); }
-    function save() { localStorage.setItem('penguin_island_guide', JSON.stringify(state)); }
+    function save() { localStorage.setItem('penguin_island_v3', JSON.stringify(state)); }
 
     function endGameFlow() {
-        if(!confirm("要結束今天的建設，拍一張全體大合照嗎？")) return;
+        if(!confirm("要結束建設並拍一張大合照嗎？")) return;
         document.getElementById('quiz-overlay').classList.remove('hidden');
-        document.getElementById('quiz-title').innerText = "📸 我們的島民大合照";
-        document.getElementById('quiz-q').innerText = "這是在你的帶領下，小島最美好的模樣！";
+        document.getElementById('quiz-title').innerText = "📸 小島大合照";
         document.getElementById('quiz-options').innerHTML = "";
+        document.getElementById('invite-area').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
         document.getElementById('restart-btn').classList.remove('hidden');
-        
-        const cvs = document.getElementById('final-canvas');
-        cvs.style.display = "block";
+        const cvs = document.getElementById('final-canvas'); cvs.style.display = "block";
         const ctx = cvs.getContext('2d');
         ctx.fillStyle = "#81d4fa"; ctx.fillRect(0,0,380,380);
         ctx.fillStyle = "#f1f8e9"; ctx.beginPath(); ctx.arc(190, 450, 250, 0, Math.PI*2); ctx.fill();
@@ -380,12 +378,10 @@
         state.unlockedPlants.forEach((icon, i) => { ctx.fillText(icon, 200 + (i % 4) * 40, 250 + (Math.floor(i/4) * 35)); });
         ctx.fillStyle = "#01579b"; ctx.font = "bold 20px 'Microsoft JhengHei'"; ctx.textAlign = "center";
         ctx.fillText(`${state.name} 的小島紀念`, 190, 40);
-        ctx.font = "14px 'Microsoft JhengHei'";
-        ctx.fillText(`居所：${state.names[state.lvl]} | 島民：${state.res.ani} | 植物：${state.res.pla}`, 190, 70);
-        localStorage.removeItem('penguin_island_guide');
+        localStorage.removeItem('penguin_island_v3');
     }
 
-    const saved = localStorage.getItem('penguin_island_guide');
+    const saved = localStorage.getItem('penguin_island_v3');
     if(saved) {
         state = JSON.parse(saved);
         if(state.name) {
