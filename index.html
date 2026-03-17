@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>南極企鵝築巢大冒險</title>
+    <title>南極企鵝築巢大冒險 - 結算版</title>
     <style>
         :root {
             --paper-beige: #f9f4e8;
@@ -12,6 +12,8 @@
             --gold: #d4af37;
             --penguin-black: #263238;
             --penguin-beak: #ff9800;
+            --success-green: #4caf50;
+            --danger-red: #f44336;
         }
 
         body {
@@ -22,12 +24,13 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
         }
 
         #game-container {
             width: 95%;
             max-width: 800px;
-            height: 650px;
+            height: 680px;
             background: var(--paper-beige);
             border-radius: 15px;
             border: 8px solid white;
@@ -38,39 +41,41 @@
             overflow: hidden;
         }
 
-        /* 頂部導覽 */
+        /* 導覽列 */
         #top-nav {
             background: white;
             padding: 10px;
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             border-bottom: 2px solid #ddd;
         }
 
         .nav-tab {
-            padding: 8px 30px;
+            padding: 8px 25px;
             border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
-            border: none;
+            border: 2px solid transparent;
             font-size: 14px;
+            transition: 0.3s;
         }
 
-        .tab-active { background: var(--ocean-blue); color: white; }
-        .tab-inactive { background: #eee; color: #888; border: 1px solid #ddd; }
+        .tab-active { background: var(--ocean-blue); color: white; border-color: var(--deep-blue); }
+        .tab-locked { background: #eee; color: #aaa; cursor: not-allowed; border: 1px dashed #ccc; }
+        .tab-special { background: #fff3e0; color: #e65100; border-color: #ffb74d; }
 
-        /* 資源 HUD */
+        /* 資訊 HUD */
         #hud {
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.7);
             border-bottom: 1px dashed #ccc;
         }
 
-        .res-box { display: flex; gap: 15px; font-weight: bold; color: var(--deep-blue); }
+        .res-box { display: flex; gap: 12px; font-weight: bold; color: var(--deep-blue); }
 
         /* 地圖區域 */
         #game-screen {
@@ -78,85 +83,66 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
-            gap: 20px;
-            padding: 25px;
-            background-image: radial-gradient(#fff 10%, transparent 10%);
-            background-size: 20px 20px;
+            gap: 15px;
+            padding: 20px;
+            background: radial-gradient(circle, #ffffff 1px, transparent 1px);
+            background-size: 25px 25px;
         }
 
         .stage-card {
             background: white;
             border-radius: 12px;
             border: 3px solid var(--gold);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
+            transition: 0.2s;
         }
 
-        .stage-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-        }
+        .stage-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
         .stage-title {
-            margin-top: 10px;
-            padding: 2px 20px;
+            margin-top: 8px;
+            padding: 2px 18px;
             background: var(--deep-blue);
             color: white;
             border-radius: 4px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
         }
 
-        /* 圖示 */
-        .icon-wrap { height: 60px; display: flex; align-items: center; }
-        .icon-branch { width: 40px; height: 10px; background: #795548; transform: rotate(45deg); border-radius: 5px; }
-        .icon-leaf { width: 35px; height: 35px; background: #81c784; border-radius: 0 80%; transform: rotate(-45deg); border: 2px solid #558b2f; }
-        .icon-stone { width: 45px; height: 30px; background: #9e9e9e; border-radius: 40% 60% 40% 50%; border-bottom: 4px solid #616161; }
-        
-        /* 阿德利企鵝圖示 */
+        /* 圖示元件 */
+        .icon-wrap { height: 50px; display: flex; align-items: center; }
+        .icon-branch { width: 35px; height: 8px; background: #795548; transform: rotate(45deg); border-radius: 4px; }
+        .icon-leaf { width: 30px; height: 30px; background: #81c784; border-radius: 0 80%; transform: rotate(-45deg); border: 2px solid #558b2f; }
+        .icon-stone { width: 40px; height: 25px; background: #9e9e9e; border-radius: 40% 60%; border-bottom: 4px solid #616161; }
         .icon-adelie {
-            width: 40px; height: 50px; background: var(--penguin-black);
+            width: 35px; height: 45px; background: var(--penguin-black);
             border-radius: 50% 50% 30% 30%; position: relative;
         }
         .icon-adelie::after {
-            content: ''; position: absolute; width: 26px; height: 32px;
-            background: white; bottom: 4px; left: 7px; border-radius: 50% 50% 40% 40%;
+            content: ''; position: absolute; width: 22px; height: 28px;
+            background: white; bottom: 4px; left: 6.5px; border-radius: 50% 50% 40% 40%;
         }
-        .eye-ring { width: 8px; height: 8px; background: white; border-radius: 50%; position: absolute; top: 12px; z-index: 3; }
-        .beak { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 6px solid var(--penguin-beak); position: absolute; top: 18px; left: 16px; z-index: 3; }
+        .eye { width: 7px; height: 7px; background: white; border-radius: 50%; position: absolute; top: 12px; z-index: 3; }
+        .beak { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 6px solid var(--penguin-beak); position: absolute; top: 18px; left: 13.5px; z-index: 3; }
 
-        /* 建築區域 */
-        #build-area {
-            padding: 15px;
-            background: white;
-            border-top: 2px solid var(--gold);
-            text-align: center;
-        }
-
-        .progress-container { width: 100%; height: 12px; background: #eee; border-radius: 10px; margin: 10px 0; overflow: hidden; border: 1px solid #ddd; }
+        /* 建築面板 */
+        #build-area { padding: 15px; background: white; border-top: 2px solid var(--gold); text-align: center; }
+        .progress-container { width: 100%; height: 12px; background: #eee; border-radius: 10px; margin: 8px 0; overflow: hidden; border: 1px solid #ddd; }
         #progress-bar { width: 0%; height: 100%; background: linear-gradient(to right, #4caf50, #8bc34a); transition: 0.5s; }
 
-        /* 彈出視窗 */
-        .overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 100;
-        }
-
-        .modal {
-            background: var(--paper-beige); padding: 30px; border-radius: 15px;
-            width: 80%; max-width: 400px; text-align: center; border: 5px solid white;
-        }
-
-        .btn-main { background: var(--deep-blue); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; font-weight: bold; }
-        .btn-option { background: white; border: 2px solid var(--deep-blue); padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin: 5px 0; }
+        /* 彈出層 */
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 100; }
+        .modal { background: var(--paper-beige); padding: 25px; border-radius: 15px; width: 85%; max-width: 450px; text-align: center; border: 5px solid white; }
+        
+        .btn-main { background: var(--deep-blue); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
+        .btn-option { background: white; border: 2px solid var(--deep-blue); padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin: 5px 0; font-size: 15px; }
         .input-box { width: 90%; padding: 10px; margin: 15px 0; border: 2px solid var(--gold); border-radius: 5px; text-align: center; font-size: 16px; }
-
+        
+        #final-canvas { border: 3px solid var(--gold); margin: 10px 0; max-width: 100%; display: none; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -166,102 +152,116 @@
     <div id="name-overlay" class="overlay">
         <div class="modal">
             <div class="icon-wrap" style="justify-content: center; margin-bottom: 10px;">
-                <div class="icon-adelie"><div class="eye-ring" style="left:6px;"></div><div class="eye-ring" style="right:6px;"></div><div class="beak"></div></div>
+                <div class="icon-adelie"><div class="eye" style="left:5px;"></div><div class="eye" style="right:5px;"></div><div class="beak"></div></div>
             </div>
-            <h2>你好，新夥伴！</h2>
-            <p>請輸入你的冒險者名字：</p>
-            <input type="text" id="player-input" class="input-box" placeholder="例如：Kayo">
+            <h2>你好，冒險者！</h2>
+            <p>輸入名字開始在南極蓋房子：</p>
+            <input type="text" id="player-input" class="input-box" placeholder="你的名字">
             <button class="btn-main" onclick="startGame()">開始冒險</button>
         </div>
     </div>
 
     <div id="top-nav">
-        <button class="nav-tab tab-active">主地圖</button>
-        <button class="nav-tab tab-inactive" onclick="alert('特別挑戰將在獲得第一個家後開啟！')">特別挑戰</button>
+        <button id="tab-main" class="nav-tab tab-active">主地圖</button>
+        <button id="tab-special" class="nav-tab tab-locked" onclick="startSpecial()">特別挑戰</button>
     </div>
 
     <div id="hud" class="hidden">
-        <div id="user-info">🐧 <span id="display-name">---</span></div>
+        <div>🐧 <span id="display-name">---</span></div>
         <div class="res-box">
             <span>🌿 <span id="r-branch">0</span></span>
             <span>🍃 <span id="r-leaf">0</span></span>
             <span>🪨 <span id="r-stone">0</span></span>
+            <span style="color:#e65100;">🎀 <span id="r-deco">0</span></span>
         </div>
-        <button onclick="confirmEnd()" style="cursor:pointer; background:none; border:1px solid #888; border-radius:4px; font-size:12px;">結束</button>
+        <button onclick="endGameFlow()" style="cursor:pointer; font-size:12px; border-radius:4px; border:1px solid #888;">結束</button>
     </div>
 
     <div id="game-screen">
-        <div class="stage-card" onclick="startQuiz('branch')">
+        <div class="stage-card" onclick="triggerQuiz('branch')">
             <div class="icon-wrap"><div class="icon-branch"></div></div>
             <div class="stage-title">樹枝林</div>
         </div>
-        <div class="stage-card" onclick="startQuiz('leaf')">
+        <div class="stage-card" onclick="triggerQuiz('leaf')">
             <div class="icon-wrap"><div class="icon-leaf"></div></div>
             <div class="stage-title">樹葉谷</div>
         </div>
-        <div class="stage-card" onclick="startQuiz('stone')">
+        <div class="stage-card" onclick="triggerQuiz('stone')">
             <div class="icon-wrap"><div class="icon-stone"></div></div>
             <div class="stage-title">石頭礦</div>
         </div>
-        <div class="stage-card" onclick="startQuiz('penguin')">
+        <div class="stage-card" onclick="triggerQuiz('penguin')">
             <div class="icon-wrap">
-                <div class="icon-adelie"><div class="eye-ring" style="left:6px;"></div><div class="eye-ring" style="right:6px;"></div><div class="beak"></div></div>
+                <div class="icon-adelie"><div class="eye" style="left:5px;"></div><div class="eye" style="right:5px;"></div><div class="beak"></div></div>
             </div>
             <div class="stage-title">企鵝村</div>
         </div>
     </div>
 
     <div id="build-area">
-        <div id="house-status" style="font-weight: bold; font-size: 14px;">當前居所：露天雪地</div>
+        <div id="house-status" style="font-size: 14px; font-weight: bold;">當前居所：露天雪地</div>
         <div class="progress-container"><div id="progress-bar"></div></div>
-        <button class="btn-main" onclick="tryBuild()" style="width: auto; padding: 5px 30px;">蓋房子</button>
+        <button class="btn-main" onclick="tryBuild()" style="width: auto; padding: 5px 30px;">升級房子</button>
     </div>
 
     <div id="quiz-overlay" class="overlay hidden">
-        <div class="modal">
-            <h4 id="quiz-type" style="color:var(--deep-blue); margin:0;">挑戰中...</h4>
-            <p id="quiz-q" style="font-size: 18px; line-height: 1.5;"></p>
+        <div class="modal" id="modal-content">
+            <h4 id="quiz-title" style="margin:0; color:var(--deep-blue);">挑戰</h4>
+            <p id="quiz-q" style="font-size: 17px; margin: 15px 0; text-align: left;"></p>
             <div id="quiz-options"></div>
-            <p id="quiz-msg" style="margin-top:10px; font-weight:bold;"></p>
-            <button id="next-btn" class="btn-main hidden" onclick="closeModal()">繼續</button>
+            <p id="quiz-msg" style="font-weight:bold; margin-top:10px;"></p>
+            
+            <canvas id="final-canvas" width="400" height="400"></canvas>
+            
+            <button id="next-btn" class="btn-main hidden" onclick="closeModal()">確認</button>
+            <div id="final-btns" class="hidden">
+                <button class="btn-main" onclick="location.reload()" style="background:#555;">重新冒險</button>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // --- 題庫與邏輯 ---
+    // --- 完整題庫 (台灣華語 A2-B1) ---
     const questions = {
         branch: [
-            { q: "「這本書___我看完了。」", a: ["把", "被", "讓"], c: 1 },
-            { q: "他跑得___我快。", a: ["比", "跟", "像"], c: 0 }
+            { q: "「這份文件我已經___主管列印好了。」", a: ["讓", "被", "把"], c: 2 },
+            { q: "天氣越冷，我就___不想起床。", a: ["才", "越", "就"], c: 1 },
+            { q: "這台電腦___妹妹弄壞了。", a: ["被", "讓", "給"], c: 0 }
         ],
         leaf: [
-            { q: "這雙鞋子雖然很貴，___質量很好。", a: ["但是", "而且", "所以"], c: 0 },
-            { q: "我要買一___筆。", a: ["條", "個", "枝"], c: 2 }
+            { q: "在台灣超商買飲料，如果不想加冰塊可以說：", a: ["全冰", "去冰", "微糖"], c: 1 },
+            { q: "如果你想搭捷運或公車，最好準備一張___。", a: ["信用卡", "悠遊卡", "學生證"], c: 1 },
+            { q: "請幫我把這張照片___出來。", a: ["列印", "打印", "打字"], c: 0 }
         ],
         stone: [
-            { q: "在台灣，飲料「微糖」是指？", a: ["3分糖", "7分糖", "不加糖"], c: 0 },
-            { q: "台灣捷運站內不可以？", a: ["看報紙", "吃東西", "講電話"], c: 1 }
+            { q: "在台灣，博愛座主要是優先給誰坐的？", a: ["有錢的人", "有需要的人", "小朋友"], c: 1 },
+            { q: "聽到垃圾車播放「給愛麗絲」的音樂，代表：", a: ["表演開始", "可以倒垃圾了", "要升旗了"], c: 1 },
+            { q: "台灣人說「微糖」通常代表幾分糖？", a: ["3分", "7分", "不加糖"], c: 0 }
         ],
         penguin: [
-            { q: "綜合題：小明：「請問這附近有便利商店嗎？」小華：「___路口右轉就到了。」", a: ["從", "在", "往"], c: 2 }
+            { q: "綜合題：小明：「請問去台北車站怎麼走？」\n小華：「___路口右轉就是了。」", a: ["往", "在", "從"], c: 1 }
+        ],
+        special: [
+            { q: "【特別挑战】台灣最有名的「珍珠奶茶」，裡面的珍珠通常是由什麼做的？", a: ["地瓜粉（粉圓）", "椰子", "麵粉"], c: 0 },
+            { q: "【特別挑战】在台灣買東西拿到的「統一發票」，最重要的功能是？", a: ["當作收據", "參加對獎", "抵稅"], c: 1 }
         ],
         event: [
-            { q: "【暴風雪】「不見不散」的意思是？", a: ["不見面就解散", "一定要見到面", "不想見面"], c: 1 }
+            { q: "【緊急：暴風雪】在台灣如果想買「優酪乳」，應該去哪裡？", a: ["藥局", "超市或超商", "文具店"], c: 1 }
         ]
     };
 
     let state = {
         name: "",
-        res: { branch: 0, leaf: 0, stone: 0 },
+        res: { branch: 0, leaf: 0, stone: 0, deco: 0 },
         lvl: 0,
-        names: ["露天雪地", "溫馨草窩", "堅固木屋", "華麗石宮"],
-        req: [0, 3, 8, 15]
+        names: ["露天雪地 ❄️", "溫馨草窩 🌿", "堅固木屋 🪵", "華麗石宮 🏛️"],
+        req: [0, 4, 10, 20]
     };
 
     function startGame() {
         const n = document.getElementById('player-input').value.trim();
-        if (!n) return alert("請輸入名字！");
+        if(!n) return alert("請輸入名字！");
         state.name = n;
         document.getElementById('name-overlay').classList.add('hidden');
         document.getElementById('hud').classList.remove('hidden');
@@ -273,40 +273,58 @@
         document.getElementById('r-branch').innerText = state.res.branch;
         document.getElementById('r-leaf').innerText = state.res.leaf;
         document.getElementById('r-stone').innerText = state.res.stone;
+        document.getElementById('r-deco').innerText = state.res.deco;
+
         const total = state.res.branch + state.res.leaf + state.res.stone;
         const target = state.req[state.lvl+1] || state.req[state.lvl];
         const p = state.lvl >= 3 ? 100 : Math.min((total/target)*100, 100);
         document.getElementById('progress-bar').style.width = p + "%";
         document.getElementById('house-status').innerText = `當前居所：${state.names[state.lvl]} (材料: ${total}/${target})`;
+
+        // 特別挑戰解鎖
+        const tab = document.getElementById('tab-special');
+        if (state.lvl >= 1) {
+            tab.className = "nav-tab tab-special";
+            tab.innerText = "特別挑戰 (解鎖)";
+        }
     }
 
-    function startQuiz(type) {
-        if (Math.random() < 0.15) return triggerEvent();
-        const qList = questions[type === 'penguin' ? 'penguin' : type];
+    function triggerQuiz(type) {
+        if(Math.random() < 0.15) return triggerEvent();
+        const qList = (type === 'penguin') ? questions.penguin : questions[type];
         const qData = qList[Math.floor(Math.random()*qList.length)];
-        showQuizModal("地圖挑戰", qData, (isCorrect) => {
-            if (isCorrect) {
-                if (type === 'penguin') state.res.branch++; // 企鵝村獎勵
+        showModal("地圖挑戰", qData, (isCorrect) => {
+            if(isCorrect) {
+                if(type === 'penguin') state.res.stone++;
                 else state.res[type]++;
             }
             save(); updateUI();
         });
     }
 
+    function startSpecial() {
+        if(state.lvl < 1) return alert("請先升級到「溫馨草窩」再解鎖特別挑戰！");
+        const qData = questions.special[Math.floor(Math.random()*questions.special.length)];
+        showModal("特別任務：獲取裝飾", qData, (isCorrect) => {
+            if(isCorrect) state.res.deco++;
+            save(); updateUI();
+        });
+    }
+
     function triggerEvent() {
         const qData = questions.event[0];
-        showQuizModal("⚠️ 緊急事件：暴風雪！", qData, (isCorrect) => {
-            if (!isCorrect) {
+        showModal("⚠️ 緊急事件！", qData, (isCorrect) => {
+            if(!isCorrect) {
                 state.res.branch = Math.max(0, state.res.branch - 1);
-                alert("你損失了材料...");
+                alert("挑戰失敗，你損失了一些樹枝...");
             }
             save(); updateUI();
         });
     }
 
-    function showQuizModal(title, data, callback) {
+    function showModal(title, data, callback) {
         document.getElementById('quiz-overlay').classList.remove('hidden');
-        document.getElementById('quiz-type').innerText = title;
+        document.getElementById('quiz-title').innerText = title;
         document.getElementById('quiz-q').innerText = data.q;
         document.getElementById('quiz-msg').innerText = "";
         document.getElementById('next-btn').classList.add('hidden');
@@ -319,12 +337,12 @@
             b.onclick = () => {
                 const all = optDiv.querySelectorAll('button');
                 all.forEach(btn => btn.disabled = true);
-                if (i === data.c) {
-                    document.getElementById('quiz-msg').innerText = "✨ 正確！獲得了獎勵。";
+                if(i === data.c) {
+                    document.getElementById('quiz-msg').innerText = "✨ 正確！獲得獎勵。";
                     document.getElementById('quiz-msg').style.color = "green";
                     callback(true);
                 } else {
-                    document.getElementById('quiz-msg').innerText = "❌ 答錯了，再接再厲！";
+                    document.getElementById('quiz-msg').innerText = "❌ 答錯了！正確是：" + data.a[data.c];
                     document.getElementById('quiz-msg').style.color = "red";
                     callback(false);
                 }
@@ -335,32 +353,75 @@
     }
 
     function tryBuild() {
-        if (state.lvl >= 3) return alert("你已經擁有最好的石宮了！");
+        if(state.lvl >= 3) return alert("已完成最高等級！");
         const total = state.res.branch + state.res.leaf + state.res.stone;
-        if (total >= state.req[state.lvl+1]) {
+        if(total >= state.req[state.lvl+1]) {
             state.lvl++;
-            alert(`恭喜升級為：${state.names[state.lvl]}！`);
+            alert(`恭喜！升級為：${state.names[state.lvl]} 🎉`);
             save(); updateUI();
         } else {
-            alert("材料還不夠喔，再去收集一點吧！");
-        }
-    }
-
-    function confirmEnd() {
-        if (confirm(`冒險者 ${state.name}，確定要結束並清除紀錄嗎？`)) {
-            localStorage.removeItem('penguin_game_save_v4');
-            location.reload();
+            alert(`材料還不夠喔，還差 ${state.req[state.lvl+1] - total} 個。`);
         }
     }
 
     function closeModal() { document.getElementById('quiz-overlay').classList.add('hidden'); }
-    function save() { localStorage.setItem('penguin_game_save_v4', JSON.stringify(state)); }
+    function save() { localStorage.setItem('penguin_vFinal', JSON.stringify(state)); }
+
+    // --- 最終畫布生成功能 ---
+    function endGameFlow() {
+        if(!confirm("確定要結束冒險並領取證書嗎？")) return;
+        document.getElementById('quiz-overlay').classList.remove('hidden');
+        document.getElementById('quiz-title').innerText = "📜 冒險結算證書";
+        document.getElementById('quiz-q').innerText = "恭喜你！這是你的南極建築成果：\n(可長按圖片儲存)";
+        document.getElementById('quiz-options').innerHTML = "";
+        document.getElementById('next-btn').classList.add('hidden');
+        document.getElementById('final-btns').classList.remove('hidden');
+        
+        const cvs = document.getElementById('final-canvas');
+        cvs.style.display = "block";
+        const ctx = cvs.getContext('2d');
+        
+        // 繪製背景
+        ctx.fillStyle = "#e0f7fa";
+        ctx.fillRect(0,0,400,400);
+        ctx.strokeStyle = "#d4af37";
+        ctx.lineWidth = 10;
+        ctx.strokeRect(10,10,380,380);
+
+        // 標題
+        ctx.fillStyle = "#0277bd";
+        ctx.font = "bold 24px 'Microsoft JhengHei'";
+        ctx.textAlign = "center";
+        ctx.fillText("南極建築大師證書", 200, 50);
+
+        // 房子圖案 (簡約風格)
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(100, 150, 200, 150); // 屋身
+        ctx.fillStyle = (state.lvl >= 2) ? "#795548" : "#8bc34a"; // 屋頂顏色隨等級
+        ctx.beginPath();
+        ctx.moveTo(80, 150); ctx.lineTo(200, 80); ctx.lineTo(320, 150);
+        ctx.fill();
+
+        // 裝飾品
+        ctx.font = "30px serif";
+        for(let i=0; i<state.res.deco; i++) {
+            ctx.fillText("🎀", 50 + (i%5)*70, 340 + (Math.floor(i/5)*40));
+        }
+
+        // 文字資訊
+        ctx.fillStyle = "#263238";
+        ctx.font = "18px 'Microsoft JhengHei'";
+        ctx.fillText(`冒險者：${state.name}`, 200, 315);
+        ctx.fillText(`最終居所：${state.names[state.lvl]}`, 200, 340);
+        
+        localStorage.removeItem('penguin_vFinal');
+    }
 
     // 初始化
-    const saved = localStorage.getItem('penguin_game_save_v4');
-    if (saved) {
+    const saved = localStorage.getItem('penguin_vFinal');
+    if(saved) {
         state = JSON.parse(saved);
-        if (state.name) {
+        if(state.name) {
             document.getElementById('name-overlay').classList.add('hidden');
             document.getElementById('hud').classList.remove('hidden');
             updateUI();
