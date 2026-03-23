@@ -85,7 +85,7 @@
         <div class="modal">
             <div style="font-size: 50px;">🐧</div>
             <h2>企鵝森友會</h2>
-            <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: left; font-size: 14px; color: #01579b;">「你是這座島主。透過冒險裝飾這座島，找朋友、種植物，完成心目中的家！」</div>
+            <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: left; font-size: 14px; color: #01579b;">「你是這座島的主人。接受挑戰並裝飾這座島，找朋友、種植物，完成你的家吧！」</div>
             <p>請輸入島主名字：</p>
             <input type="text" id="player-input" style="width:80%; padding:10px; text-align:center; border:2px solid var(--ocean-blue); border-radius:10px; font-size:18px;" placeholder="名字">
             <button class="btn-main" onclick="showBookSelection()">下一步</button>
@@ -450,7 +450,7 @@
                 { q: "為了學好中文，我常上網___資料。", a: ["搜尋", "申請", "下訂單"], c: 0 },
                 { q: "這次考試，我___及格了。", a: ["終於", "居然", "恐怕"], c: 0 },
                 { q: "他的中文聲調很___。", a: ["準", "快", "慢"], c: 0 },
-                { q: "這份合約太長，安德思看___。", a: ["不懂", "不完", "不到"], c: 0 },
+                { q: "這份合約太長，安德思看___。", a: ["不懂", "不能", "不想"], c: 0 },
                 { q: "他提出的想法很受店長的___。", a: ["重視", "重量", "重心"], c: 0 },
                 { q: "我已經四個月沒下雨，快沒水___了。", a: ["喝", "洗", "用"], c: 0 },
                 { q: "發生什麼事？你快說___。", a: ["清楚", "說明", "內容"], c: 0 }
@@ -492,16 +492,16 @@
                 { q: "請問拼音「hóu zi」對應的漢字是：", a: ["猴子", "盒子", "鬍子"], c: 0, icon: "🐒", name: "猴哥", type: "PtoH" }
             ],
             plant: [
-                { q: "請問「橘子」的拼音是：", a: ["jú zi", "jǘ zi", "qú zi"], c: 0, icon: "🍊", name: "大吉", type: "HtoP" },
-                { q: "請問拼音「fān qié」對應的漢字是：", a: ["番茄", "翻茄", "分茄"], c: 0, icon: "🍅", name: "湯姆", type: "PtoH" },
-                { q: "請問「西瓜」的拼音是：", a: ["xī guā", "xié guā", "sī guā"], c: 0, icon: "🍉", name: "維特", type: "HtoP" },
-                { q: "請問拼音「máng guǒ」對應的漢字是：", a: ["芒果", "忙過", "盲過"], c: 0, icon: "🥭", name: "小芒", type: "PtoH" },
-                { q: "請問「櫻花」的拼音是：", a: ["yīng huā", "yǐng huā", "rīng huā"], c: 0, icon: "🌸", name: "小櫻", type: "HtoP" },
+                { q: "請問「橘子」的拼音是：", a: ["jú zi", "jǘ zi", "qú zi"], c: 0, icon: "🍊", name: "橘子", type: "HtoP" },
+                { q: "請問拼音「fān qié」對應的漢字是：", a: ["番茄", "翻茄", "分茄"], c: 0, icon: "🍅", name: "番茄", type: "PtoH" },
+                { q: "請問「西瓜」的拼音是：", a: ["xī guā", "xié guā", "sī guā"], c: 0, icon: "🍉", name: "西瓜", type: "HtoP" },
+                { q: "請問拼音「máng guǒ」對應的漢字是：", a: ["芒果", "忙過", "盲過"], c: 0, icon: "🥭", name: "芒果", type: "PtoH" },
+                { q: "請問「櫻花」的拼音是：", a: ["yīng huā", "yǐng huā", "rīng huā"], c: 0, icon: "🌸", name: "櫻花", type: "HtoP" },
                 { q: "請問拼音「shū cài」對應的漢字是：", a: ["蔬菜", "水果", "甜點"], c: 0, icon: "🥬", name: "蔬菜", type: "PtoH" },
                 { q: "請問「向日葵」的拼音是：", a: ["xiàng rì kuí", "xiǎng rì kuí", "siàng rì kuí"], c: 0, icon: "🌻", name: "向日葵", type: "HtoP" },
                 { q: "請問拼音「xiān zhǎng zhǎng」對應的漢字是：", a: ["仙人掌", "鮮人掌", "險人掌"], c: 0, icon: "🌵", name: "仙人掌", type: "PtoH" },
                 { q: "請問「聖誕樹」的拼音是：", a: ["shèng dàn shù", "shèn dàn shù", "sèn dàn shù"], c: 0, icon: "🎄", name: "聖誕樹", type: "HtoP" },
-                { q: "請問拼音「méi guī huā」對應的漢字是：", a: ["玫瑰花", "梅花", "桃花"], c: 0, icon: "🌹", name: "玫瑰", type: "PtoH" }
+                { q: "請問拼音「méi guī huā」對應的漢字是：", a: ["玫瑰花", "梅花", "桃花"], c: 0, icon: "🌹", name: "玫瑰花", type: "PtoH" }
             ]
         }
     };
@@ -703,13 +703,21 @@
         
         const optDiv = document.getElementById('quiz-options');
         optDiv.innerHTML = "";
-        data.a.forEach((txt, i) => {
+        
+        // 將選項陣列洗牌 (Fisher-Yates Shuffle)
+        let options = data.a.map((txt, index) => ({ text: txt, isCorrect: index === data.c }));
+        for (let i = options.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [options[i], options[j]] = [options[j], options[i]];
+        }
+
+        options.forEach((opt) => {
             const b = document.createElement('button');
             b.className = "btn-option";
-            b.innerText = txt;
+            b.innerText = opt.text;
             b.onclick = () => {
                 optDiv.querySelectorAll('button').forEach(btn => btn.disabled = true);
-                callback(i === data.c, txt); 
+                callback(opt.isCorrect, opt.text); 
                 if(title !== "招募島民") document.getElementById('next-btn').classList.remove('hidden');
             };
             optDiv.appendChild(b);
@@ -791,23 +799,19 @@
 
     // --- 生成結業證書 ---
     function showCertificate() {
-        // 取消任何被選取的物品外框
         state.selectedItemIndex = -1;
         drawIsland();
 
         const layoutCvs = document.getElementById('final-canvas');
         
-        // 創造一個新的高解析度畫布來畫證書
         const certCvs = document.createElement('canvas');
         certCvs.width = 600;
         certCvs.height = 750;
         const ctx = certCvs.getContext('2d');
 
-        // 畫背景
-        ctx.fillStyle = "#fffde7"; // 淡黃色背景
+        ctx.fillStyle = "#fffde7";
         ctx.fillRect(0, 0, 600, 750);
 
-        // 畫邊框
         ctx.strokeStyle = "#ffb300";
         ctx.lineWidth = 12;
         ctx.strokeRect(20, 20, 560, 710);
@@ -815,13 +819,11 @@
         ctx.lineWidth = 4;
         ctx.strokeRect(38, 38, 524, 674);
 
-        // 標題
         ctx.fillStyle = "#d84315";
         ctx.font = "bold 45px 'Microsoft JhengHei'";
         ctx.textAlign = "center";
         ctx.fillText("🏆 企鵝森友會 結業證書 🏆", 300, 100);
 
-        // 內文
         ctx.fillStyle = "#333333";
         ctx.font = "bold 26px 'Microsoft JhengHei'";
         ctx.fillText(`茲證明 島主`, 300, 165);
@@ -834,7 +836,6 @@
         ctx.font = "bold 26px 'Microsoft JhengHei'";
         ctx.fillText(`成功完成 ${islandTypes[state.selectedBook]} (B${state.selectedBook}) 的所有挑戰！`, 300, 290);
 
-        // 畫上學生佈置的小島截圖 (加入裝飾框)
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(105, 315, 390, 390);
         ctx.strokeStyle = "#81d4fa";
@@ -842,14 +843,12 @@
         ctx.strokeRect(105, 315, 390, 390);
         ctx.drawImage(layoutCvs, 110, 320, 380, 380);
 
-        // 日期
         const today = new Date();
         const dateStr = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
         ctx.fillStyle = "#666666";
         ctx.font = "20px 'Microsoft JhengHei'";
         ctx.fillText(`頒發日期：${dateStr}`, 300, 740);
 
-        // 轉成圖片放進 HTML
         const dataURL = certCvs.toDataURL('image/png');
         
         document.getElementById('layout-area').classList.add('hidden');
@@ -857,7 +856,6 @@
         document.getElementById('certificate-area').classList.remove('hidden');
         document.getElementById('cert-img').src = dataURL;
 
-        // 清除本次遊玩紀錄，讓下一個人可以重玩 (教師後台紀錄保留)
         localStorage.removeItem('penguin_island_massive_v12');
     }
 
