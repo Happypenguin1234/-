@@ -28,8 +28,8 @@
         #game-container {
             width: 95vw;
             max-width: 800px;
-            height: 95vh; /* 改為動態視窗高度 */
-            max-height: 850px;
+            height: 90vh; 
+            max-height: 800px;
             background: #ffffff;
             border-radius: 30px;
             border: 10px solid #fff;
@@ -40,36 +40,37 @@
             overflow: hidden;
         }
 
-        #top-nav { background: #f1f8e9; padding: 1.5vh; display: flex; justify-content: center; gap: 10px; border-bottom: 3px solid #dcedc8; }
-        .nav-tab { padding: 1vh 2vw; border-radius: 20px; font-weight: bold; cursor: pointer; border: none; font-size: clamp(12px, 1.5vh, 16px); transition: 0.3s; }
+        /* 導覽列加回來了！保證不變形 */
+        #top-nav { flex-shrink: 0; background: #f1f8e9; padding: 15px; display: flex; justify-content: center; gap: 10px; border-bottom: 3px solid #dcedc8; }
+        .nav-tab { padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; border: none; font-size: clamp(12px, 1.5vh, 16px); transition: 0.3s; }
         .tab-main { background: var(--island-green); color: #2e7d32; }
         .tab-locked { background: #e0e0e0; color: #9e9e9e; cursor: not-allowed; }
         .tab-unlocked { background: #ffccbc; color: #d84315; box-shadow: 0 3px 0 #ffab91; }
 
-        #hud { padding: 1.5vh 25px; display: flex; justify-content: space-between; align-items: center; background: #fff; font-weight: bold; font-size: clamp(14px, 2vh, 18px); }
-        .res-group { display: flex; gap: 12px; }
+        #hud { flex-shrink: 0; padding: 10px 25px; display: flex; justify-content: space-between; align-items: center; background: #fff; font-weight: bold; }
+        .res-group { display: flex; gap: 12px; font-size: clamp(12px, 1.5vh, 14px); }
 
-        .book-btn { background: white; border: 3px solid var(--island-green); padding: 2vh 25px; margin: 1.5vh auto; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: clamp(16px, 2.5vh, 20px); color: #2e7d32; transition: 0.3s; display: block; width: 80%; }
+        .book-btn { background: white; border: 3px solid var(--island-green); padding: 15px 25px; margin: 10px auto; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 18px; color: #2e7d32; transition: 0.3s; display: block; width: 80%; }
         .book-btn:hover { background: var(--island-green); color: white; }
 
-        #game-screen { flex-grow: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1.5vh; padding: 2vh; background: linear-gradient(to bottom, #f0faff, #ffffff); overflow-y: auto; }
+        #game-screen { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 15px; padding: 15px 25px; background: linear-gradient(to bottom, #f0faff, #ffffff); }
         .stage-card { background: white; border-radius: 20px; border: 4px solid var(--island-green); display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; min-height: 0; }
         .stage-card:hover { transform: scale(1.03); background: #f1f8e9; }
-        .stage-title { margin-top: 1vh; font-weight: bold; color: #2e7d32; font-size: clamp(14px, 2vh, 18px); }
+        .stage-title { margin-top: 10px; font-weight: bold; color: #2e7d32; font-size: clamp(14px, 2vh, 16px); }
 
-        #build-area { padding: 2vh; background: #f9f9f9; text-align: center; border-top: 2px solid #eee; flex-shrink: 0; }
-        .progress-container { width: 100%; height: 1.5vh; background: #eee; border-radius: 10px; margin: 1vh 0; overflow: hidden; }
+        #build-area { flex-shrink: 0; padding: 15px; background: #f9f9f9; text-align: center; border-top: 2px solid #eee; }
+        .progress-container { width: 100%; height: 15px; background: #eee; border-radius: 10px; margin: 10px 0; overflow: hidden; }
         #progress-bar { width: 0%; height: 100%; background: var(--island-green); transition: 0.8s; }
 
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 100; }
-        .modal { background: white; padding: 3vh 5vw; border-radius: 25px; width: 85%; max-width: 450px; text-align: center; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
+        .modal { background: white; padding: 30px; border-radius: 25px; width: 85%; max-width: 450px; text-align: center; max-height: 90vh; overflow-y: auto; }
         
-        .event-warning { color: var(--danger-red); font-weight: bold; border: 2px solid var(--danger-red); padding: 1vh; border-radius: 10px; margin-bottom: 1vh; background: #ffebee; width: 100%; box-sizing: border-box; }
-        .btn-main { background: var(--deep-blue); color: white; border: none; padding: 1.5vh; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 1vh; font-size: clamp(14px, 2vh, 18px); }
-        .btn-option { background: #f1f8e9; border: 2px solid var(--island-green); padding: 1.5vh; border-radius: 10px; cursor: pointer; width: 100%; margin: 0.8vh 0; font-size: clamp(14px, 2vh, 16px); font-weight: bold; color: #2e7d32; }
+        .event-warning { color: var(--danger-red); font-weight: bold; border: 2px solid var(--danger-red); padding: 10px; border-radius: 10px; margin-bottom: 10px; background: #ffebee; }
+
+        .btn-main { background: var(--deep-blue); color: white; border: none; padding: 12px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
+        .btn-option { background: #f1f8e9; border: 2px solid var(--island-green); padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; margin: 6px 0; font-size: 16px; font-weight: bold; color: #2e7d32; }
         
-        /* 讓畫布跟著視窗縮放 */
-        #final-canvas { width: 100%; max-width: 380px; aspect-ratio: 1 / 1; border: 5px solid var(--island-green); margin-top: 1.5vh; display: none; background: white; border-radius: 15px; cursor: crosshair; }
+        #final-canvas { border: 5px solid var(--island-green); margin-top: 10px; display: none; background: white; border-radius: 15px; cursor: crosshair; max-width: 100%; height: auto; aspect-ratio: 1/1; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -78,22 +79,28 @@
 <div id="game-container">
     <div id="name-overlay" class="overlay">
         <div class="modal">
-            <div style="font-size: clamp(40px, 8vh, 60px);">🐧</div>
-            <h2 style="margin: 1vh 0;">企鵝森友會</h2>
-            <div style="background: #e3f2fd; padding: 1.5vh; border-radius: 10px; margin-bottom: 2vh; text-align: left; font-size: clamp(13px, 1.8vh, 15px); color: #01579b; width: 100%; box-sizing: border-box;">「你是這座島主。透過冒險裝飾這座島，找朋友、種植物，完成心目中的家！」</div>
-            <p style="margin: 0 0 1vh 0; font-weight: bold;">請輸入島主名字：</p>
-            <input type="text" id="player-input" style="width:90%; padding:1.5vh; text-align:center; border:2px solid var(--ocean-blue); border-radius:10px; font-size:18px; box-sizing: border-box;" placeholder="名字">
+            <div style="font-size: 50px;">🐧</div>
+            <h2>企鵝森友會</h2>
+            <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: left; font-size: 14px; color: #01579b;">「你是這座島主。透過冒險裝飾這座島，找朋友、種植物，完成心目中的家！」</div>
+            <p>請輸入島主名字：</p>
+            <input type="text" id="player-input" style="width:80%; padding:10px; text-align:center; border:2px solid var(--ocean-blue); border-radius:10px; font-size:18px;" placeholder="名字">
             <button class="btn-main" onclick="showBookSelection()">下一步</button>
         </div>
     </div>
 
     <div id="book-overlay" class="overlay hidden">
         <div class="modal">
-            <h2 style="margin-top:0;">選擇島嶼</h2>
+            <h2>選擇你想要住的島</h2>
             <button class="book-btn" onclick="selectBook(1)">小島 (B1)</button>
             <button class="book-btn" onclick="selectBook(2)">中島 (B2)</button>
             <button class="book-btn" onclick="selectBook(3)">大島 (B3)</button>
         </div>
+    </div>
+
+    <div id="top-nav" class="hidden">
+        <button id="tab-animal" class="nav-tab tab-locked" onclick="startSpecial('animal')">招募島民</button>
+        <button id="tab-main" class="nav-tab tab-main">我的小島</button>
+        <button id="tab-plant" class="nav-tab tab-locked" onclick="startSpecial('plant')">種種植物</button>
     </div>
 
     <div id="hud" class="hidden">
@@ -103,32 +110,32 @@
             <span>👥 <span id="r-ani">0</span></span>
             <span>🌸 <span id="r-pla">0</span></span>
         </div>
-        <button onclick="endGameFlow()" style="background:#eee; border:1px solid #ccc; cursor:pointer; border-radius:5px; font-size:clamp(12px, 1.5vh, 14px); padding: 5px 10px;">佈置與結算</button>
+        <button onclick="endGameFlow()" style="background:#eee; border:1px solid #ccc; cursor:pointer; border-radius:5px; padding: 5px 10px;">佈置與結算</button>
     </div>
 
     <div id="game-screen">
         <div class="stage-card" onclick="triggerQuiz('pinyin')">
-            <div style="font-size: clamp(30px, 6vh, 50px);">🪨</div>
+            <div style="font-size: 40px;">🪨</div>
             <div class="stage-title">挖掘石頭</div>
         </div>
         <div class="stage-card" onclick="triggerQuiz('grammar')">
-            <div style="font-size: clamp(30px, 6vh, 50px);">🪵</div>
+            <div style="font-size: 40px;">🪵</div>
             <div class="stage-title">收集木頭</div>
         </div>
         <div class="stage-card" onclick="triggerQuiz('usage')">
-            <div style="font-size: clamp(30px, 6vh, 50px);">🍃</div>
+            <div style="font-size: 40px;">🍃</div>
             <div class="stage-title">採集樹葉</div>
         </div>
         <div class="stage-card" onclick="triggerQuiz('culture')">
-            <div style="font-size: clamp(30px, 6vh, 50px);">🐧</div>
+            <div style="font-size: 40px;">🐧</div>
             <div class="stage-title">拜訪朋友</div>
         </div>
     </div>
 
     <div id="build-area">
-        <div id="house-status" style="font-weight:bold; color:#2e7d32; font-size: clamp(14px, 2vh, 18px);">進度：露天帳篷</div>
+        <div id="house-status" style="font-weight:bold; color:#2e7d32;">進度：露天帳篷</div>
         <div class="progress-container"><div id="progress-bar"></div></div>
-        <button class="btn-main" style="width: auto; padding: 1vh 4vw;" onclick="tryBuild()">房屋升級</button>
+        <button class="btn-main" onclick="tryBuild()" style="width:auto; padding:8px 40px;">房屋升級</button>
     </div>
 
     <div id="quiz-overlay" class="overlay hidden">
@@ -137,23 +144,23 @@
             <h3 id="quiz-title" style="margin:0; color:#2e7d32;">任務挑戰</h3>
             
             <div id="quiz-content-area" style="width: 100%;">
-                <p id="quiz-q" style="font-size: clamp(16px, 2.2vh, 20px); margin: 2vh 0; line-height: 1.6; text-align: left;"></p>
+                <p id="quiz-q" style="font-size: 18px; margin: 20px 0; line-height: 1.6; text-align: left;"></p>
                 <div id="quiz-options" style="width: 100%;"></div>
             </div>
             
             <div id="invite-area" class="hidden" style="width: 100%;">
-                <p id="invite-text" style="font-size: clamp(16px, 2.2vh, 20px); font-weight: bold; color: var(--deep-blue); margin: 2vh 0;"></p>
+                <p id="invite-text" style="font-size: 19px; font-weight: bold; color: var(--deep-blue); margin: 20px 0;"></p>
                 <div style="display: flex; gap: 10px;">
                     <button class="btn-main" style="background: var(--island-green); color: #1b5e20; margin-top:0;" onclick="handleInvite(true)">要</button>
                     <button class="btn-main" style="background: #ffcdd2; color: #b71c1c; margin-top:0;" onclick="handleInvite(false)">不要</button>
                 </div>
             </div>
             
-            <p id="quiz-msg" style="font-weight:bold; margin-top:2vh; min-height: 3vh; font-size: clamp(14px, 2vh, 18px);"></p>
+            <p id="quiz-msg" style="font-weight:bold; margin-top:15px; min-height: 24px;"></p>
             
             <div id="layout-area" class="hidden" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
                 <canvas id="final-canvas" width="380" height="380"></canvas>
-                <p style="color: #666; font-size: clamp(12px, 1.5vh, 14px); margin-top: 1.5vh;">點擊選取物品，點擊空地移動位置。</p>
+                <p style="color: #666; font-size: 12px; margin-top: 10px;">點擊選取物品，點擊空地移動位置。</p>
                 <button class="btn-main" onclick="closeModal()">繼續建設</button>
                 <button class="btn-main" style="background:#888;" onclick="location.reload()">重新開始</button>
             </div>
@@ -164,7 +171,7 @@
 </div>
 
 <script>
-    // --- 每區 40 題完整大擴充 ---
+    // 完整 240+ 題庫
     const allQuestions = {
         1: { // 第一冊 (B1)
             pinyin: [
@@ -231,7 +238,7 @@
                 { q: "昨天我跟同學去___聽演唱會。", a: ["現場", "現實", "內容"], c: 0 },
                 { q: "這件外套款式很___。", a: ["流行", "內容", "清楚"], c: 0 },
                 { q: "這件事我已經跟你說得很___了。", a: ["清楚", "說明", "內容"], c: 0 },
-                { q: "你的感冒___不嚴重？", a: ["算不具", "算不算", "不算"], c: 1 }
+                { q: "你的感冒___不嚴重？", a: ["算不算", "算不具", "不算"], c: 0 }
             ],
             culture: [ 
                 { q: "在台灣，看到朋友常用哪一句話打招呼？", a: ["吃飽了沒？", "你去哪裡？", "天氣很好。"], c: 0 },
@@ -329,8 +336,7 @@
                 { q: "在台灣，參加婚禮通常會送：", a: ["紅包", "時鐘", "手錶"], c: 0 },
                 { q: "「台北101」曾是世界第一高的：", a: ["大樓", "山", "塔"], c: 0 },
                 { q: "台灣人過年喜歡吃什麼代表「年年有餘」？", a: ["魚", "雞", "豬"], c: 0 },
-                { q: "台灣的「2 號線」捷運是什麼顏色的？", a: ["紅色", "藍色", "綠色"], c: 0 },
-                { q: "如果想在台灣提錢，可以去找：", a: ["提款機 (ATM)", "販賣機", "洗衣機"], c: 0 },
+                { q: "如果想在台灣領錢，可以去找：", a: ["提款機 (ATM)", "販賣機", "洗衣機"], c: 0 },
                 { q: "台灣人稱呼便利商店為：", a: ["超商", "超市", "雜貨店"], c: 0 },
                 { q: "「師大」是哪一所大學的簡稱？", a: ["師範大學", "科技大學", "政治大學"], c: 0 },
                 { q: "春節時，大家常說什麼來祝賀？", a: ["恭喜發財", "新年痛苦", "生日快樂"], c: 0 },
@@ -424,7 +430,6 @@
                 { q: "台灣最高的高山是？", a: ["玉山", "阿里山", "陽明山"], c: 0 },
                 { q: "中秋節大家喜歡一起吃：", a: ["月餅", "粽子", "水餃"], c: 0 },
                 { q: "端午節除了戴香包，還會划：", a: ["龍舟", "快艇", "獨木舟"], c: 0 },
-                { q: "台南最有名的美食之一是：", a: ["擔仔麵", "牛肉麵", "炸醬麵"], c: 0 },
                 { q: "故宮博物院內可以參觀什麼？", a: ["古代文物", "最新科技", "運動比賽"], c: 0 },
                 { q: "「台北101」大樓最著名的活動是什麼？", a: ["跨年煙火", "籃球賽", "動漫展"], c: 0 },
                 { q: "在台灣買東西拿到的「統一發票」可以用來：", a: ["參加對獎", "當作門票", "搭乘公車"], c: 0 },
@@ -466,22 +471,16 @@
     const islandTypes = { 1: "小島", 2: "中島", 3: "大島" };
 
     let state = {
-        name: "",
-        selectedBook: 1,
-        res: { pts: 0, ani: 0, pla: 0 },
-        lvl: 0,
+        name: "", selectedBook: 1, res: { pts: 0, ani: 0, pla: 0 }, lvl: 0,
         names: ["露天帳篷 ⛺", "溫馨木屋 🪵", "雙層別墅 🏡", "夢幻大堡壘 🏰"],
-        req: [0, 5, 12, 25],
-        items: [], 
-        currentAnimal: null,
-        selectedItemIndex: -1
+        req: [0, 5, 12, 25], items: [], currentAnimal: null, selectedItemIndex: -1
     };
 
     const typeToItem = { "pinyin": "石頭", "grammar": "木頭", "usage": "樹葉", "culture": "朋友" };
 
     function showBookSelection() {
         const n = document.getElementById('player-input').value.trim();
-        if(!n) return alert("請輸入島主名字！");
+        if(!n) return alert("請輸入名字！");
         state.name = n;
         document.getElementById('name-overlay').classList.add('hidden');
         document.getElementById('book-overlay').classList.remove('hidden');
@@ -490,24 +489,10 @@
     function selectBook(num) {
         state.selectedBook = num;
         document.getElementById('book-overlay').classList.add('hidden');
+        document.getElementById('top-nav').classList.remove('hidden');
         document.getElementById('hud').classList.remove('hidden');
         document.getElementById('display-book').innerText = `${islandTypes[num]}`;
         updateUI();
-    }
-
-    function updateUI() {
-        document.getElementById('display-name').innerText = state.name;
-        document.getElementById('r-pts').innerText = state.res.pts;
-        document.getElementById('r-ani').innerText = state.res.ani;
-        document.getElementById('r-pla').innerText = state.res.pla;
-        const target = state.req[state.lvl+1] || state.req[state.lvl];
-        const p = state.lvl >= 3 ? 100 : Math.min((state.res.pts/target)*100, 100);
-        document.getElementById('progress-bar').style.width = p + "%";
-        document.getElementById('house-status').innerText = `開發進度：${state.names[state.lvl]} (${state.res.pts}/${target})`;
-        if(state.lvl >= 1) {
-            document.getElementById('tab-animal').className = "nav-tab tab-unlocked";
-            document.getElementById('tab-plant').className = "nav-tab tab-unlocked";
-        }
     }
 
     function triggerQuiz(type) {
@@ -596,6 +581,20 @@
         });
     }
 
+    function updateUI() {
+        document.getElementById('display-name').innerText = state.name;
+        document.getElementById('r-pts').innerText = state.res.pts;
+        document.getElementById('r-ani').innerText = state.res.ani;
+        document.getElementById('r-pla').innerText = state.res.pla;
+        const target = state.req[state.lvl+1] || state.req[state.lvl];
+        document.getElementById('progress-bar').style.width = Math.min((state.res.pts/target)*100, 100) + "%";
+        document.getElementById('house-status').innerText = `開發進度：${state.names[state.lvl]}`;
+        if(state.lvl >= 1) {
+            document.getElementById('tab-animal').className = "nav-tab tab-unlocked";
+            document.getElementById('tab-plant').className = "nav-tab tab-unlocked";
+        }
+    }
+
     function tryBuild() {
         if(state.lvl >= 3) return alert("已達最高等級！");
         if(state.res.pts >= state.req[state.lvl+1]) {
@@ -605,12 +604,11 @@
 
     function closeModal() { document.getElementById('quiz-overlay').classList.add('hidden'); }
 
-    // --- 佈置與結算 (完全隱藏殘留文字) ---
+    // --- 徹底隱藏題目，只顯示佈置畫面 ---
     function endGameFlow() {
         document.getElementById('quiz-overlay').classList.remove('hidden');
         document.getElementById('quiz-title').innerText = "📸 你的小島！";
         
-        // 透過 display:none 徹底把文字區塊變不見
         document.getElementById('quiz-content-area').style.display = 'none';
         document.getElementById('quiz-msg').style.display = 'none';
         document.getElementById('event-header').className = 'hidden';
@@ -627,17 +625,17 @@
         cvs.style.display = "block";
         const ctx = cvs.getContext('2d');
         
-        ctx.fillStyle = "#e1f5fe"; ctx.fillRect(0,0,380,380); // 海
+        ctx.fillStyle = "#e1f5fe"; ctx.fillRect(0,0,380,380); 
         
-        ctx.fillStyle = "#f1f8e9"; ctx.beginPath(); // 土地
+        ctx.fillStyle = "#f1f8e9"; ctx.beginPath(); 
         if (state.selectedBook === 1) ctx.ellipse(190, 310, 140, 90, 0, 0, Math.PI*2);
         else if (state.selectedBook === 2) ctx.ellipse(190, 330, 170, 120, 0, 0, Math.PI*2);
         else ctx.arc(190, 400, 240, 0, Math.PI*2);
         ctx.fill();
         
-        ctx.fillStyle = "#8d6e63"; ctx.fillRect(140, 170, 100, 80); // 房子
+        ctx.fillStyle = "#8d6e63"; ctx.fillRect(140, 170, 100, 80); 
         ctx.fillStyle = "#d84315"; ctx.beginPath(); ctx.moveTo(130,170); ctx.lineTo(190,120); ctx.lineTo(250,170); ctx.fill();
-        ctx.font = "40px Arial"; ctx.fillText("🐧", 170, 280); // 企鵝
+        ctx.font = "40px Arial"; ctx.fillText("🐧", 170, 280); 
         
         state.items.forEach((item, index) => {
             ctx.font = (state.selectedItemIndex === index) ? "50px Arial" : "30px Arial";
@@ -651,7 +649,6 @@
         ctx.fillText(`${state.name} 的南極小島`, 190, 45);
     }
 
-    // 解決視窗縮放導致滑鼠點擊座標偏移的問題
     document.getElementById('final-canvas').addEventListener('mousedown', (e) => {
         const cvs = e.target;
         const rect = cvs.getBoundingClientRect();
