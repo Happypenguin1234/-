@@ -206,7 +206,7 @@
 </div>
 
 <script>
-    // 原封不動地使用您刪減後的題庫版本
+    // --- 題庫區 (原封不動保留您的版本) ---
     const allQuestions = {
         1: { 
             pinyin: [
@@ -249,7 +249,9 @@
                 { q: "「我想先吃晚飯___打電話。」", a: ["再", "才", "就"], c: 0 },
                 { q: "「你是___時候到台灣的？」", a: ["什麼", "誰", "怎麼"], c: 0 },
                 { q: "「我是___公車來的。」", a: ["坐", "走", "在"], c: 0 },
-                { q: "「學費是公司替我___的。」", a: ["付", "看", "由"], c: 0 }
+                { q: "「學費是公司替我___的。」", a: ["付", "看", "由"], c: 0 },
+                { q: "「我一下課，就___晚飯。」", a: ["去吃", "吃過", "吃了"], c: 0 },
+                { q: "「弟弟___了午餐沒有？」", a: ["吃", "買", "賣"], c: 0 }
             ],
             usage: [ 
                 { q: "我們明天早上八點在門口___吧。", a: ["見面", "看見", "認識"], c: 0 },
@@ -345,7 +347,6 @@
                 { q: "「為了身體健康，我們應該少吃___的食物。」", a: ["油膩", "新鮮", "健康"], c: 0 },
                 { q: "「按照___，捷運站內禁止飲食。」", a: ["規定", "計畫", "經驗"], c: 0 },
                 { q: "「這件外套的___不錯，穿起來很暖和。」", a: ["品質", "牌子", "樣子"], c: 0 },
-                { q: "「我昨天在百貨公司___到一位老同學。」", a: ["遇", "看", "找"], c: 0 },
                 { q: "「去面試時，穿西裝比較___。」", a: ["正式", "隨便", "舒服"], c: 0 },
                 { q: "「這份工作很___，但我學到很多。」", a: ["辛苦", "熱鬧", "容易"], c: 0 },
                 { q: "「我___你要去日本，原來你是要去韓國。」", a: ["以為", "認為", "感覺"], c: 0 },
@@ -455,12 +456,15 @@
                 { q: "台灣最高的高山是？", a: ["玉山", "阿里山", "陽明山"], c: 0 },
                 { q: "中秋節大家喜歡一起吃：", a: ["月餅", "粽子", "水餃"], c: 0 },
                 { q: "端午節除了戴香包，還會划：", a: ["龍舟", "快艇", "獨木舟"], c: 0 },
+                { q: "台南最有名的美食之一是：", a: ["擔仔麵", "牛肉麵", "炸醬麵"], c: 0 },
                 { q: "故宮博物院內可以參觀什麼？", a: ["古代文物", "最新科技", "運動比賽"], c: 0 },
+                { q: "台灣的「2 號線」捷運是什麼顏色的？", a: ["紅色", "藍色", "綠色"], c: 0 },
                 { q: "「台北101」大樓最著名的活動是什麼？", a: ["跨年煙火", "籃球賽", "動漫展"], c: 0 },
                 { q: "在台灣買東西拿到的「統一發票」可以用來：", a: ["參加對獎", "當作門票", "搭乘公車"], c: 0 },
                 { q: "台灣人吃火鍋喜歡沾什麼醬？", a: ["沙茶醬", "番茄醬", "巧克力醬"], c: 0 },
                 { q: "台灣最有名的「珍珠奶茶」是用什麼做的？", a: ["粉圓(地瓜粉)", "麵粉", "巧克力"], c: 0 },
                 { q: "在台灣，聽到「給愛麗絲」的音樂代表什麼來了？", a: ["垃圾車", "冰淇淋車", "公車"], c: 0 },
+                { q: "台灣人稱呼便利商店為：", a: ["超商", "超市", "雜貨店"], c: 0 },
                 { q: "台灣的「珍珠」在國外常被稱為什麼？", a: ["Boba", "Candy", "Bean"], c: 0 }
             ]
         },
@@ -499,7 +503,7 @@
         selectedBook: 1,
         res: { pts: 0, ani: 0, pla: 0 },
         lvl: 0,
-        names: ["露天帳篷 ⛺", "溫馨木屋 🪵", "雙層別墅 🏡", "夢幻大堡壘 🏰"],
+        names: ["露天帳篷 ⛺", "溫馨木屋 🛖", "雙層別墅 🏡", "夢幻大堡壘 🏰"], // 更新這裡的名稱
         req: [0, 5, 12, 25],
         items: [], 
         currentAnimal: null,
@@ -649,6 +653,7 @@
                 } else {
                     state.res.pla++;
                     state.items.push({ icon: qData.icon, x: 100 + Math.random()*150, y: 200 + Math.random()*100 });
+                    // 正確顯示植物名稱
                     document.getElementById('quiz-msg').innerText = `✨ 太棒了！獲得了${qData.name}！`;
                 }
             } else {
@@ -672,7 +677,6 @@
         updateUI();
     }
 
-    // --- 修改了這裡：洗牌演算法 ---
     function showModal(title, data, callback) {
         document.getElementById('quiz-overlay').classList.remove('hidden');
         document.getElementById('layout-area').classList.add('hidden');
@@ -691,7 +695,7 @@
         const optDiv = document.getElementById('quiz-options');
         optDiv.innerHTML = "";
 
-        // 將選項陣列洗牌 (Fisher-Yates Shuffle)
+        // 答案隨機打亂 (Fisher-Yates Shuffle)
         let options = data.a.map((txt, index) => ({ text: txt, isCorrect: index === data.c }));
         for (let i = options.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -738,7 +742,7 @@
         drawIsland();
     }
 
-    // --- 修改了這裡：根據升級改變房屋 Icon ---
+    // --- 根據房屋等級畫出不同樣式的家 ---
     function drawIsland() {
         const cvs = document.getElementById('final-canvas');
         cvs.style.display = "block";
@@ -752,15 +756,18 @@
         else ctx.arc(190, 400, 240, 0, Math.PI*2);
         ctx.fill();
         
-        // 畫動態房屋 Emoji (依據等級)
-        const houseIcons = ["⛺", "🪵", "🏡", "🏰"];
+        // 畫不同等級的房子
+        const houseIcons = ["⛺", "🛖", "🏡", "🏰"];
         ctx.font = "80px Arial";
-        ctx.fillText(houseIcons[state.lvl], 150, 210); 
+        ctx.textAlign = "center";
+        ctx.fillText(houseIcons[state.lvl], 190, 220); // 置中房子
         
-        // 畫企鵝島主 (站在房子旁邊)
+        // 畫企鵝島主
         ctx.font = "40px Arial"; 
-        ctx.fillText("🐧", 220, 230); 
+        ctx.fillText("🐧", 250, 240); 
         
+        // 恢復置左來畫物品
+        ctx.textAlign = "left"; 
         state.items.forEach((item, index) => {
             ctx.font = (state.selectedItemIndex === index) ? "50px Arial" : "30px Arial";
             ctx.fillText(item.icon, item.x, item.y);
@@ -768,10 +775,6 @@
                 ctx.strokeStyle = "orange"; ctx.lineWidth = 2; ctx.strokeRect(item.x-5, item.y-35, 50, 50);
             }
         });
-        
-        ctx.fillStyle = "#01579b"; ctx.font = "bold 24px 'Microsoft JhengHei'"; ctx.textAlign = "center";
-        ctx.fillText(`${state.name} 的南極小島`, 190, 45);
-        ctx.textAlign = "left"; // 畫完標題後重置，免得影響其他座標
     }
 
     document.getElementById('final-canvas').addEventListener('mousedown', (e) => {
@@ -796,7 +799,7 @@
 
     // --- 生成結業證書 ---
     function showCertificate() {
-        state.selectedItemIndex = -1;
+        state.selectedItemIndex = -1; // 拍照前取消黃色選取框
         drawIsland();
 
         const layoutCvs = document.getElementById('final-canvas');
