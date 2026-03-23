@@ -46,7 +46,7 @@
         .tab-unlocked { background: #ffccbc; color: #d84315; box-shadow: 0 3px 0 #ffab91; }
 
         #hud { flex-shrink: 0; padding: 10px 25px; display: flex; justify-content: space-between; align-items: center; background: #fff; font-weight: bold; }
-        .res-group { display: flex; gap: 12px; font-size: clamp(12px, 1.5vh, 14px); }
+        .res-group { display: flex; gap: 12px; font-size: clamp(12px, 1.5vh, 14px); align-items: center; }
 
         .book-btn { background: white; border: 3px solid var(--island-green); padding: 15px 25px; margin: 10px auto; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 18px; color: #2e7d32; transition: 0.3s; display: block; width: 80%; }
         .book-btn:hover { background: var(--island-green); color: white; }
@@ -79,6 +79,8 @@
     </style>
 </head>
 <body>
+
+<div id="youtube-player" class="hidden"></div>
 
 <div id="game-container">
     <div id="name-overlay" class="overlay">
@@ -137,7 +139,10 @@
             <span>👥 <span id="r-ani">0</span></span>
             <span>🌸 <span id="r-pla">0</span></span>
         </div>
-        <button onclick="endGameFlow()" style="background:#eee; border:1px solid #ccc; cursor:pointer; border-radius:5px; padding: 5px 10px;">佈置與結算</button>
+        <div style="display: flex; gap: 8px;">
+            <button id="bgm-toggle" onclick="toggleBGM()" style="background:none; border:none; cursor:pointer; font-size:20px; padding: 0;">🔊</button>
+            <button onclick="endGameFlow()" style="background:#eee; border:1px solid #ccc; cursor:pointer; border-radius:5px; padding: 5px 10px;">佈置與結算</button>
+        </div>
     </div>
 
     <div id="game-screen">
@@ -206,7 +211,45 @@
 </div>
 
 <script>
-    // --- 題庫區 (原封不動保留您的版本) ---
+    // --- YouTube 音樂播放器設定 ---
+    var ytPlayer;
+    var isMusicPlaying = false;
+
+    // 載入 YouTube IFrame API
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    function onYouTubeIframeAPIReady() {
+        ytPlayer = new YT.Player('youtube-player', {
+            height: '0',
+            width: '0',
+            videoId: '22yS8q70K_U', // 動物森友會 BGM
+            playerVars: {
+                'autoplay': 0,
+                'controls': 0,
+                'loop': 1,
+                'playlist': '22yS8q70K_U' // 必須要有 playlist 才能無限循環
+            }
+        });
+    }
+
+    function toggleBGM() {
+        if (!ytPlayer || typeof ytPlayer.playVideo !== 'function') return;
+        if (isMusicPlaying) {
+            ytPlayer.pauseVideo();
+            document.getElementById('bgm-toggle').innerText = "🔇";
+            isMusicPlaying = false;
+        } else {
+            ytPlayer.playVideo();
+            document.getElementById('bgm-toggle').innerText = "🔊";
+            isMusicPlaying = true;
+        }
+    }
+
+
+    // --- 原本的題庫資料 ---
     const allQuestions = {
         1: { 
             pinyin: [
@@ -292,6 +335,7 @@
                 { q: "台灣人說「微糖」通常是指：", a: ["3分糖", "7分糖", "不加糖"], c: 0 },
                 { q: "台灣的「珍珠」在國外常被稱為什麼？", a: ["Boba", "Candy", "Bean"], c: 0 },
                 { q: "在台灣，便利商店可以繳學費嗎？", a: ["可以", "不可以", "看運氣"], c: 0 },
+                { q: "台灣人喜歡在夏天吃哪種冰？", a: ["芒果冰", "草莓冰", "奇異果冰"], c: 0 },
                 { q: "台灣的「捷運」在其他國家常被稱為什麼？", a: ["地鐵", "巴士", "纜車"], c: 0 },
                 { q: "在台灣買東西，發票不見了通常能退換商品嗎？", a: ["不能", "能", "一定能"], c: 0 }
             ]
@@ -347,6 +391,7 @@
                 { q: "「為了身體健康，我們應該少吃___的食物。」", a: ["油膩", "新鮮", "健康"], c: 0 },
                 { q: "「按照___，捷運站內禁止飲食。」", a: ["規定", "計畫", "經驗"], c: 0 },
                 { q: "「這件外套的___不錯，穿起來很暖和。」", a: ["品質", "牌子", "樣子"], c: 0 },
+                { q: "「我昨天在百貨公司___到一位老同學。」", a: ["遇", "看", "找"], c: 0 },
                 { q: "「去面試時，穿西裝比較___。」", a: ["正式", "隨便", "舒服"], c: 0 },
                 { q: "「這份工作很___，但我學到很多。」", a: ["辛苦", "熱鬧", "容易"], c: 0 },
                 { q: "「我___你要去日本，原來你是要去韓國。」", a: ["以為", "認為", "感覺"], c: 0 },
@@ -503,7 +548,7 @@
         selectedBook: 1,
         res: { pts: 0, ani: 0, pla: 0 },
         lvl: 0,
-        names: ["露天帳篷 ⛺", "溫馨木屋 🛖", "雙層別墅 🏡", "夢幻大堡壘 🏰"], // 更新這裡的名稱
+        names: ["露天帳篷 ⛺", "溫馨木屋 🛖", "雙層別墅 🏡", "夢幻大堡壘 🏰"], // 房屋名稱
         req: [0, 5, 12, 25],
         items: [], 
         currentAnimal: null,
@@ -512,6 +557,42 @@
     };
 
     const typeToItem = { "pinyin": "石頭", "grammar": "木頭", "usage": "樹葉", "culture": "朋友" };
+
+    // --- YouTube 音樂播放器設定 ---
+    var ytPlayer;
+    var isMusicPlaying = false;
+
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    function onYouTubeIframeAPIReady() {
+        ytPlayer = new YT.Player('youtube-player', {
+            height: '0',
+            width: '0',
+            videoId: '22yS8q70K_U', 
+            playerVars: {
+                'autoplay': 0,
+                'controls': 0,
+                'loop': 1,
+                'playlist': '22yS8q70K_U' 
+            }
+        });
+    }
+
+    function toggleBGM() {
+        if (!ytPlayer || typeof ytPlayer.playVideo !== 'function') return;
+        if (isMusicPlaying) {
+            ytPlayer.pauseVideo();
+            document.getElementById('bgm-toggle').innerText = "🔇";
+            isMusicPlaying = false;
+        } else {
+            ytPlayer.playVideo();
+            document.getElementById('bgm-toggle').innerText = "🔊";
+            isMusicPlaying = true;
+        }
+    }
 
     // --- 教師後台系統 ---
     function openTeacherDashboard() {
@@ -589,6 +670,13 @@
         state.name = n;
         document.getElementById('name-overlay').classList.add('hidden');
         document.getElementById('book-overlay').classList.remove('hidden');
+
+        // 開始播放音樂
+        if (ytPlayer && typeof ytPlayer.playVideo === 'function' && !isMusicPlaying) {
+            ytPlayer.playVideo();
+            isMusicPlaying = true;
+            document.getElementById('bgm-toggle').innerText = "🔊";
+        }
     }
 
     function selectBook(num) {
@@ -653,8 +741,7 @@
                 } else {
                     state.res.pla++;
                     state.items.push({ icon: qData.icon, x: 100 + Math.random()*150, y: 200 + Math.random()*100 });
-                    // 正確顯示植物名稱
-                    document.getElementById('quiz-msg').innerText = `✨ 太棒了！獲得了${qData.name}！`;
+                    document.getElementById('quiz-msg').innerText = `✨ 太棒了！獲得了${qData.name}！`; // 正確顯示植物名稱
                 }
             } else {
                 state.wrongLog.push({ q: qData.q, wrong: chosenText, correct: qData.a[qData.c] });
@@ -695,7 +782,7 @@
         const optDiv = document.getElementById('quiz-options');
         optDiv.innerHTML = "";
 
-        // 答案隨機打亂 (Fisher-Yates Shuffle)
+        // 將選項陣列洗牌 (Fisher-Yates Shuffle)
         let options = data.a.map((txt, index) => ({ text: txt, isCorrect: index === data.c }));
         for (let i = options.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -724,7 +811,7 @@
 
     function closeModal() { document.getElementById('quiz-overlay').classList.add('hidden'); }
 
-    function save() { localStorage.setItem('penguin_island_vfinal', JSON.stringify(state)); }
+    function save() { localStorage.setItem('penguin_island_vfinal_bgm', JSON.stringify(state)); }
 
     // --- 進入佈置模式 ---
     function endGameFlow() {
@@ -742,7 +829,7 @@
         drawIsland();
     }
 
-    // --- 根據房屋等級畫出不同樣式的家 ---
+    // --- 動態繪製房屋與島嶼 ---
     function drawIsland() {
         const cvs = document.getElementById('final-canvas');
         cvs.style.display = "block";
@@ -756,18 +843,18 @@
         else ctx.arc(190, 400, 240, 0, Math.PI*2);
         ctx.fill();
         
-        // 畫不同等級的房子
+        // 根據等級畫出不同的房子
         const houseIcons = ["⛺", "🛖", "🏡", "🏰"];
         ctx.font = "80px Arial";
         ctx.textAlign = "center";
-        ctx.fillText(houseIcons[state.lvl], 190, 220); // 置中房子
+        ctx.fillText(houseIcons[state.lvl], 190, 210); 
         
-        // 畫企鵝島主
+        // 畫企鵝
         ctx.font = "40px Arial"; 
-        ctx.fillText("🐧", 250, 240); 
+        ctx.fillText("🐧", 250, 230); 
         
-        // 恢復置左來畫物品
-        ctx.textAlign = "left"; 
+        // 畫物品
+        ctx.textAlign = "left";
         state.items.forEach((item, index) => {
             ctx.font = (state.selectedItemIndex === index) ? "50px Arial" : "30px Arial";
             ctx.fillText(item.icon, item.x, item.y);
@@ -799,7 +886,7 @@
 
     // --- 生成結業證書 ---
     function showCertificate() {
-        state.selectedItemIndex = -1; // 拍照前取消黃色選取框
+        state.selectedItemIndex = -1;
         drawIsland();
 
         const layoutCvs = document.getElementById('final-canvas');
@@ -855,7 +942,7 @@
         document.getElementById('certificate-area').classList.remove('hidden');
         document.getElementById('cert-img').src = dataURL;
 
-        localStorage.removeItem('penguin_island_vfinal');
+        localStorage.removeItem('penguin_island_vfinal_bgm');
     }
 
     function downloadCertificate() {
@@ -865,7 +952,7 @@
         link.click();
     }
 
-    const saved = localStorage.getItem('penguin_island_vfinal');
+    const saved = localStorage.getItem('penguin_island_vfinal_bgm');
     if(saved) {
         state = JSON.parse(saved);
         if(state.name) {
